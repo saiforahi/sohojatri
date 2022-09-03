@@ -25,11 +25,13 @@ class CreateUsersTable extends Migration
             $table->string('year')->nullable();
             $table->string('gender')->nullable();
             $table->integer('user_id');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->string('password')->nullable();
             $table->string('token')->nullable();
             $table->string('facebook_id')->nullable();
             $table->boolean('status')->default(0);
+            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('phone_verified_at')->nullable();
             $table->timestamps();
         });
     }
