@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\backend;
 
 use DB;
-use App\car;
-use App\car_brand;
+use App\Models\car;
+use App\Models\car_brand;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

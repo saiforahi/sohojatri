@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\backend;
 
-use App\stopover;
-use App\post_ride;
+use App\Models\stopover;
+use App\Models\post_ride;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

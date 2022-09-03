@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\backend;
 
-use App\ride_setting;
+use App\Models\ride_setting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

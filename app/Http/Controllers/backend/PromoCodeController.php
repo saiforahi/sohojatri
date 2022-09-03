@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\backend;
 
-use App\promo_code;
+use App\Models\promo_code;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

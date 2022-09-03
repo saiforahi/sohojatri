@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\frontend;
 
 use App\Http\Helper\CommonHelper;
-use App\user;
-use App\Validation;
+use App\Models\user;
+use App\Models\Validation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\verification;
+use App\Models\verification;
 use Intervention\Image\Facades\Image;
 use Laravel\Socialite\Facades\Socialite;
 

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\frontend;
 
-use App\notification;
-use App\stopover;
+use App\Models\notification;
+use App\Models\stopover;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

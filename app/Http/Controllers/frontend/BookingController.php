@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\frontend;
 
-use App\booking;
-use App\booking_cancel;
-use App\corporate;
-use App\promo_code;
-use App\ride_setting;
-use App\user_rating;
+use App\Models\booking;
+use App\Models\booking_cancel;
+use App\Models\corporate;
+use App\Models\promo_code;
+use App\Models\ride_setting;
+use App\Models\user_rating;
 use PHPUnit\Util\RegularExpression;
 use Session;
-use App\car;
-use App\post_ride;
-use App\stopover;
+use App\Models\car;
+use App\Models\post_ride;
+use App\Models\stopover;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

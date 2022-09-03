@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\frontend;
 
-use App\car;
+use App\Models\car;
 use DB;
-use App\car_brand;
-use App\reference;
+use App\Models\car_brand;
+use App\Models\reference;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;

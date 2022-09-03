@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\frontend;
 
-use App\request_ride;
+use App\Models\request_ride;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;

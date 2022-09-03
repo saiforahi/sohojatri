@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\backend;
 
-use App\corporate;
-use App\corporate_group;
-use App\user;
+use App\Models\corporate;
+use App\Models\corporate_group;
+use App\Models\user;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

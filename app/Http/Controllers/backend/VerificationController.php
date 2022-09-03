@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\backend;
 
-use App\verification;
+use App\Models\verification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\user;
-use App\rejectphoto;
-use App\rejectReason;
+use App\Models\user;
+use App\Models\rejectphoto;
+use App\Models\rejectReason;
 
 class VerificationController extends Controller
 {

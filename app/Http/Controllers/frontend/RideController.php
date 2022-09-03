@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\frontend;
 
-use App\popular_ride;
-use App\post_ride;
-use App\resource;
-use App\ride_setting;
-use App\stopover;
-use App\user;
+use App\Models\popular_ride;
+use App\Models\post_ride;
+use App\Models\resource;
+use App\Models\ride_setting;
+use App\Models\stopover;
+use App\Models\user;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\backend;
 
-use App\admin_panel;
+use App\Models\admin_panel;
 use Illuminate\Support\Facades\Hash;
 use Session;
 use Validator;

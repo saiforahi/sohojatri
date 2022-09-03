@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helper\CommonHelper;
-use App\landing_image;
-use App\popular_ride;
-use App\stopover;
-use App\user;
-use App\Validation;
-use App\verification;
+use App\Models\landing_image;
+use App\Models\popular_ride;
+use App\Models\stopover;
+use App\Models\user;
+use App\Models\Validation;
+use App\Models\verification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;

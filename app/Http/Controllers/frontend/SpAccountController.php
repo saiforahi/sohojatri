@@ -4,13 +4,13 @@ namespace App\Http\Controllers\frontend;
 
 use Illuminate\Support\Facades\Hash;
 
-use App\close_account;
-use App\user;
+use App\Models\close_account;
+use App\Models\user;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
 use Intervention\Image\Facades\Image;
-use App\rejectphoto;
+use App\Models\rejectphoto;
 use App;
 
 class SpAccountController extends Controller

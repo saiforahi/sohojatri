@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\frontend;
 
-use App\post_ride;
-use App\ride_setting;
-use App\stopover;
+use App\Models\post_ride;
+use App\Models\ride_setting;
+use App\Models\stopover;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

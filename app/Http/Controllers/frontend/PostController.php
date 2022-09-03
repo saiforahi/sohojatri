@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\frontend;
 
-use App\booking;
-use App\post_ride;
-use App\post_ride_address;
-use App\post_time_update;
-use App\ride_setting;
-use App\stopover;
-use App\verification;
+use App\Models\booking;
+use App\Models\post_ride;
+use App\Models\post_ride_address;
+use App\Models\post_time_update;
+use App\Models\ride_setting;
+use App\Models\stopover;
+use App\Models\verification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

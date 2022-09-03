@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\backend;
 
-use App\faulty_trip;
-use App\popular_ride;
-use App\post_ride;
-use App\post_time_update;
-use App\ride_setting;
-use App\stopover;
+use App\Models\faulty_trip;
+use App\Models\popular_ride;
+use App\Models\post_ride;
+use App\Models\post_time_update;
+use App\Models\ride_setting;
+use App\Models\stopover;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

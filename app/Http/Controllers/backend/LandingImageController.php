@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\backend;
 
-use App\landing_image;
+use App\Models\landing_image;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
