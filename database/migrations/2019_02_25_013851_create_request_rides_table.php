@@ -22,7 +22,7 @@ class CreateRequestRidesTable extends Migration
             $table->string('e_lng');
             $table->string('e_location');
             $table->string('after');
-            $table->string('before');
+            $table->string('before')->nullable();
             $table->string('seat');
             $table->integer('user_id');
             $table->timestamps();

@@ -91,7 +91,7 @@ class PostController extends Controller
         ]);
 
         if ($request->departure < date("m / d / Y")) {
-            Session::flash('message', 'You Cant post any back data and time ride.');
+            Session::flash('message', 'Invalid date');
             return redirect('post-ride');
         }
 
