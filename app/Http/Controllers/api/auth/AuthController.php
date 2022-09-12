@@ -7,19 +7,22 @@ use App\Models\User;
 use App\Models\Dealer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\VerifyOTP;
+use App\Models\Validation;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
     protected $general_reg_rules=[
         'name' => 'required|string|between:2,100',
         'lname' => 'required|string|between:2,100',
-        'email' => 'required|string|email|max:100',
-        "phone" => ['required','regex:/(^(\+8801|8801|01|008801))[1|3-9]{1}(\d){8}$/','max:11','min:11'],
+        'email' => 'required|string|email|max:100|unique:users,email',
+        "phone" => ['required','regex:/(^(\+8801|8801|01|008801))[1|3-9]{1}(\d){8}$/','max:11','min:11','unique:users,phone'],
         'day' => 'required|string',
         'month' => 'required|string',
         'year' => 'required|string',
@@ -65,7 +68,15 @@ class AuthController extends Controller
         }
         
     }
+    public function verifyOTP(){
+        try{
 
+            return response()->json(['success'=>true,'message'=>'OTP Verified!',"data"=>$user],200);
+        }
+        catch(Exception $e){
+            return response()->json(['success'=>false,'errors'=>$e->getMessage()], 500);
+        }
+    }
     public function register(Request $request) {
         $validator=Validator::make($request->all(),$this->general_reg_rules);
         if($validator->fails()){                                            //validating general registration rules
@@ -88,6 +99,14 @@ class AuthController extends Controller
                 }
             }
             $user->save();
+            $otp=random_int(100000, 999999);
+            Validation::create([
+                'fk_user_id'=>$user->user_id,
+                'destination'=>$user->email,
+                'validation_type'=>'email',
+                'code'=>$otp
+            ]);
+            Mail::to($user->email)->send(new VerifyOTP($otp,$user->name));
             return response()->json([
                 'success' => true,
                 'message'=> 'Registration Successful',
@@ -97,7 +116,7 @@ class AuthController extends Controller
         catch (Exception $e){
             return response()->json([
                 'success' => false,
-                'message' => 'User registration failed!',
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

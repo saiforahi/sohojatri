@@ -42,7 +42,7 @@
                 <div style="width:700px;margin:0 auto">
                     <div
                         style="padding:10px 10px 0;border-top:1px solid #cccccc;color:#747474;margin-bottom:20px;line-height:1.3em;font-size:12.0px">
-                        <p>2021 Durpalla Group. All rights reserved.</p>
+                        <p>2022 Sohojatri. All rights reserved.</p>
                     </div>
                 </div>
             </td>

@@ -15,8 +15,8 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('phone')->nullable();
-			$table->string('email')->nullable();
+            $table->string('phone')->unique()->nullable();
+			$table->string('email')->unique()->nullable();
             $table->string('phone_verify')->nullable();
             $table->string('name');
 			$table->string('lname')->nullable();
@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->string('token')->nullable();
             $table->string('facebook_id')->nullable();
+            $table->string('logincount')->nullable();
             $table->boolean('status')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
