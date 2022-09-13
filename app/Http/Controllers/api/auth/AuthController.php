@@ -107,6 +107,7 @@ class AuthController extends Controller
                 'code'=>$otp
             ]);
             Mail::to($user->email)->send(new VerifyOTP($otp,$user->name));
+            
             return response()->json([
                 'success' => true,
                 'message'=> 'Registration Successful',

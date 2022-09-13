@@ -12,6 +12,7 @@ class user extends Authenticatable
     //
     protected $table="users";
     protected $guarded=[];
+    protected $hidden=['password'];
     protected $casts = [
         'email_verified_at' => 'datetime:Y-m-d h:i:s A',
         'created_at'=>'datetime:Y-m-d h:i:s A',

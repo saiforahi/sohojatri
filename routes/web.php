@@ -10,7 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/mailable', function () {
+    return new App\Mail\VerifyOTP("123456","saif");
+});
 Route::get('/', 'homeController@homepage')->name('home');
 
 Route::get('/language', 'homeController@language')->name('language');
