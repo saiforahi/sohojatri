@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('validations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('fk_user_id');
+            $table->string('fk_user_id');
             $table->string('destination');
             $table->integer('code');
             $table->string('validation_type');

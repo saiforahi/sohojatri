@@ -19,7 +19,8 @@ class CreateReferencesTable extends Migration
             $table->string('profession');
             $table->string('phone');
             $table->string('address',300);
-            $table->integer('user_id');
+            $table->string('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users');
             $table->timestamps();
         });
     }

@@ -6,59 +6,59 @@
     float: left;
     padding: 1px;
     width: 100%;
-    
+      
+  }
+  .cardHead{
+    height: 30px;
+    padding: 2px 20px;
+  }
+  .reject{
+    text-align: center;
+    color: wheat;
+    margin: 1px;
+    padding-left: 177px;
+  }
+.messreject{
+    width: 70%;
 }
-        .cardHead{
-            height: 30px;
-            padding: 2px 20px;
-        }
-        .reject{
-                text-align: center;
-                color: wheat;
-                margin: 1px;
-                padding-left: 177px;
-        }
-        .messreject{
-            width: 70%;
-        }
-       
-         .imagezoom{
-                     padding: 2px;
-                   /*  margin-left: 52px; */
-                    margin-bottom: 10px;
-        } .imagezoom1{
-                   padding: 2px;
-                 /*   margin-left: 52px; */
-                   margin-bottom: 8px;
-                              
-        }
-        .imgshow{
-             margin-left: 10px;
 
-        }
-       .imgshow1{
-          margin-left: 31px;
-        }
-        .imgshowmodal{
-             margin-left: 35px;
-             padding-left: 112px;
-             padding-right: 90px;
-             height: 136px;
-            width: 85px;
-            padding-bottom: 2px;
-        
-        }
-         .btn_close{
-                        float: right;padding: 3px 15px;
-                    }
-                    .btn_close:hover{
-                        background-color: #d00000;
-                    }    
-                    .border_radius_nun{
-                        border-radius: 0px;
-                    } 
+  .imagezoom{
+              padding: 2px;
+            /*  margin-left: 52px; */
+            margin-bottom: 10px;
+} .imagezoom1{
+            padding: 2px;
+          /*   margin-left: 52px; */
+            margin-bottom: 8px;
+                      
+}
+.imgshow{
+      margin-left: 10px;
 
-    </style>
+}
+.imgshow1{
+  margin-left: 31px;
+}
+.imgshowmodal{
+      margin-left: 35px;
+      padding-left: 112px;
+      padding-right: 90px;
+      height: 136px;
+    width: 85px;
+    padding-bottom: 2px;
+
+}
+  .btn_close{
+      float: right;padding: 3px 15px;
+  }
+  .btn_close:hover{
+      background-color: #d00000;
+  }    
+  .border_radius_nun{
+      border-radius: 0px;
+  } 
+
+</style>
     <div class="contant">
      
         @if(isset($verifications))
@@ -84,22 +84,19 @@
                                Verification Information :  &nbsp;(   {{ (isset($verifications->existing) && !empty($verifications->existing))? $verifications->existing:'NULL' }} )
                                 <a type="" class="btn btn-sm bottom-right btn_close" style="" href="{{ route('admin.all.verification') }}"><i class="fas fa-times"></i></a>
                             </div>
-                          <div class="card-body border_radius_nun" style="height: 196px;">
-                             <div class="row">
-                                   @if($verifications->nid_status==1)
-                                 <div class="col-md-4">
-                                     
-                           
-
-                           <img src="{{asset('/'.$verifications->nid_image1)}}" class="img-thumbnail w-25 imgshow" style="height: 50%;width: 50%">
+                        <div class="card-body border_radius_nun" style="height: 196px;">
+                        <div class="row">
+                          @if($verifications->nid_status==1)
+                          <div class="col-md-4">
+                          <img src="{{asset('/'.$verifications->nid_image1)}}" class="img-thumbnail w-25 imgshow" style="height: 50%;width: 50%">
                             <img src="{{asset('/'.$verifications->nid_image2)}}" class="img-thumbnail w-25 imgshow1" style="height: 50%;width: 50%"><br>
-                              <button type="button" class="btn btn-primary btn-sm  imagezoom" data-toggle="modal" data-target="#imgmodal" style=" margin-top: 7px; margin-left: 34px;"> <i class="fas fa-plus"></i></button> 
+                            <button type="button" class="btn btn-primary btn-sm  imagezoom" data-toggle="modal" data-target="#imgmodal" style=" margin-top: 7px; margin-left: 34px;"> <i class="fas fa-plus"></i></button> 
                              <button type="button" class="btn btn-primary btn-sm imagezoom1"  data-toggle="modal" data-target="#imgmodal1" style="margin-top: 7px; margin-left: 72px;"> <i class="fas fa-plus"></i></button>
                          
-                                 </div>
-                                   @endif
-                                      @if($verifications->passport_status==1)
-                                      <div class="col-md-4">
+                          </div>
+                          @endif
+                            @if($verifications->passport_status==1)
+                            <div class="col-md-4">
                           
                             <img src="{{asset('/'.$verifications->passport_image1)}}" class="img-thumbnail w-25 imgshow" style="height: 50%;width: 50%">
                            <img src="{{asset('/'.$verifications->passport__image2)}}" class="img-thumbnail w-25 imgshow1" style="height: 50%;width: 50%"><br>
@@ -110,8 +107,8 @@
                            @endif
                                                                 
                                      
-                              @if($verifications->driving_status==1)
-                                <div class="col-md-4">
+                        @if($verifications->driving_status==1)
+                          <div class="col-md-4">
                             
                           <img src="{{asset('/'.$verifications->driving_image1)}}" class="img-thumbnail w-25 imgshow" style="height: 50%;width: 50%">
                          <img src="{{asset('/'.$verifications->driving__image2)}}" class="img-thumbnail w-25 imgshow1" style="height: 50%;width: 50%"><br>
@@ -119,11 +116,7 @@
                              <button type="button" class="btn btn-primary btn-sm imagezoom1" data-toggle="modal" data-target="#imgmodaldraving2" style="margin-top: 7px;margin-left: 72px;"> <i class="fas fa-plus"></i></button>
                                </div>
                             @endif
-                             
                              </div>
-                             
-                            
-                            
                             </div>
                         </div>
                         <!-- <div class="col-3 my-2" style="border-left: 1px solid #eee; width: 30%; margin: 15px auto; box-shadow: 0px 0px 5px 5px #9e9c9c;padding: 0px;border-radius: 0px 5px 5px 0px;">
@@ -133,10 +126,10 @@
                            <div class="card-body">
                                 
                           @if(isset($verifications->nid_status) && ($verifications->nid_status==1)) NID @endif
-                         @if(isset($verifications->passport_status) && ($verifications->Passport_status==1))Passport @endif
+                          @if(isset($verifications->passport_status) && ($verifications->Passport_status==1))Passport @endif
                           @if(isset($verifications->driving_status) && ($verifications->driving_status==1)) Driving @endif
                            </div>
-                                               </div> -->
+                        </div> -->
                         
                        
                         <div class="col-8 my-2">
@@ -154,9 +147,9 @@
                            
                         </div>
                         <div class="col-6 my-2">
-                           <!--  <button name="btn_s" value="app" type="submit" class="btn btn-sm btn-success">Approve</button> -->
+                           <button name="btn_s" value="app" type="submit" class="btn btn-sm btn-success">Approve</button>
                            
-                           <!--  <button name="" value="" type="button" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-sm btn-danger">Reject</button> -->
+                           <button name="" value="" type="button" data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-sm btn-danger">Reject</button>
                         </div>
                     </form>
 

@@ -23,14 +23,15 @@ class CreateUsersTable extends Migration
             $table->string('day')->nullable();
             $table->string('month')->nullable();
             $table->string('year')->nullable();
-            $table->string('gender')->nullable();
-            $table->unsignedBigInteger('user_id')->unique();
+            $table->enum('gender',['male','female']);
+            $table->string('user_id')->unique();
             $table->string('image')->nullable();
             $table->string('password')->nullable();
             $table->string('token')->nullable();
             $table->string('facebook_id')->nullable();
-            $table->string('logincount')->nullable();
+            $table->integer('logincount')->default(0);
             $table->boolean('status')->default(0);
+            $table->longText('profile_general_biography')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->timestamps();

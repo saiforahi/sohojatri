@@ -5,7 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Models\verification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\user;
+use App\Models\User;
 use App\Models\rejectphoto;
 use App\Models\rejectReason;
 
@@ -185,7 +185,7 @@ class VerificationController extends Controller
 
           if($id){
             $verifications = verification::find($id);
-              $existing_arr = [];
+            $existing_arr = [];
             $k=0;
             if($verifications->nid_status==1) $existing_arr[$k++] ='NID';
             if($verifications->passport_status==1) $existing_arr[$k++] ='Passport';

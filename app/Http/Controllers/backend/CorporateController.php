@@ -4,7 +4,7 @@ namespace App\Http\Controllers\backend;
 
 use App\Models\corporate;
 use App\Models\corporate_group;
-use App\Models\user;
+use App\Models\User;
 use Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

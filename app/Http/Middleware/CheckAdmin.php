@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Middleware;
-use Session;
+// use Session;
 use Closure;
+use Illuminate\Support\Facades\Session as FacadesSession;
 
 class CheckAdmin
 {
@@ -15,7 +16,7 @@ class CheckAdmin
      */
     public function handle($request, Closure $next)
     {
-        if(Session::get('email') != null) {
+        if(FacadesSession::get('email') != null) {
             return $next($request);  // if exist proceed to next step
         } else {
             return redirect('/admin');

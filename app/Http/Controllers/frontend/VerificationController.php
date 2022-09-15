@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\frontend;
 
 use App\Http\Helper\CommonHelper;
-use App\Models\user;
+use App\Models\User;
 use App\Models\Validation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

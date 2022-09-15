@@ -32,6 +32,6 @@ class VerifyOTP extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('email.verify');
+        return $this->subject('OTP Verification')->view('email.verify');
     }
 }

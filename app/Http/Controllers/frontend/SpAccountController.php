@@ -5,13 +5,14 @@ namespace App\Http\Controllers\frontend;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\close_account;
-use App\Models\user;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
 use Intervention\Image\Facades\Image;
 use App\Models\rejectphoto;
 use App;
+use Illuminate\Support\Facades\Session as FacadesSession;
 
 class SpAccountController extends Controller
 {
@@ -37,7 +38,7 @@ class SpAccountController extends Controller
         if (Hash::check($request->current_password, $account->password)) {
             $account->password = Hash::make($request->new_password);
             $account->save();
-            Session::flash('message', 'Password change successfully');
+            FacadesSession::flash('message', 'Password change successfully');
             return redirect('sp-account-password');
         } else return redirect()->back()->withErrors(['Your password is incorrect..']);
     }
@@ -62,7 +63,7 @@ class SpAccountController extends Controller
         }
         $user->save();
 
-        Session::flash('message', 'Account update successfully');
+        FacadesSession::flash('message', 'Account update successfully');
         return redirect('sp-account-profile');
 
     }
@@ -97,7 +98,7 @@ class SpAccountController extends Controller
         }
         $user->save();
 
-        Session::flash('message', 'Photo upload successfully');
+        FacadesSession::flash('message', 'Photo upload successfully');
         return redirect('sp-account-photo');
 
     }
@@ -122,7 +123,7 @@ class SpAccountController extends Controller
         $insert->user_id = Session('userId');
         $insert->save();
 
-        Session::flash('message', 'Account will be close');
+        FacadesSession::flash('message', 'Account will be close');
         return redirect('sp-account-close');
     }
 

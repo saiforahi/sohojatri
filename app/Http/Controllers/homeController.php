@@ -6,7 +6,7 @@ use App\Http\Helper\CommonHelper;
 use App\Models\landing_image;
 use App\Models\popular_ride;
 use App\Models\stopover;
-use App\Models\user;
+use App\Models\User;
 use App\Models\Validation;
 use App\Models\verification;
 use Illuminate\Support\Facades\Mail;

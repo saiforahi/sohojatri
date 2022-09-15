@@ -64,7 +64,7 @@ class SpController extends Controller
             $image=Image::make('public/car/'.$file_name);
             $image->resize(300,300)->save('public/car/'.$file_name);
             $car->car_image1 = $url;
-			}
+		}
         /*if ($request->hasFile('car_image2')) {
             $extension = $request->file('car_image2')->getClientOriginalExtension();
             $fileStore3 = rand(10, 100) . time() . "." . $extension;
@@ -79,7 +79,7 @@ class SpController extends Controller
             $image=Image::make('public/car/'.$file_name);
             $image->resize(300,300)->save('public/car/'.$file_name);
             $car->car_image2 = $url;
-			}
+		}
         $car->fuel = $request->fuel;
         $car->kilometers = $request->kilometers;
         $car->registration_year = $request->regYear;

@@ -29,11 +29,12 @@ class CreatePostRidesTable extends Migration
             $table->string('r_time2')->nullable();
             $table->string('seat')->nullable();
             $table->string('condition')->nullable();
-            $table->integer('car_id');
+            $table->unsignedBigInteger('car_id');
+            $table->foreign('car_id')->references('id')->on('cars');
             $table->string('driver');
             $table->string('distance');
             $table->string('duration');
-            $table->integer('user_id');
+            $table->string('user_id');
             $table->boolean('status')->default(0);
             $table->timestamps();
         });

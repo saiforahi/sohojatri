@@ -7,7 +7,7 @@ use App\Models\post_ride;
 use App\Models\resource;
 use App\Models\ride_setting;
 use App\Models\stopover;
-use App\Models\user;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

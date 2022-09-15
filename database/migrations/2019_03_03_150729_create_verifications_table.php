@@ -29,7 +29,8 @@ class CreateVerificationsTable extends Migration
             $table->boolean('driving_status')->default(0);
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->integer('user_id');
+            $table->string('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users');
             $table->timestamps();
         });
     }

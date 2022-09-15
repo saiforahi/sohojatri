@@ -24,7 +24,7 @@ class CreateRequestRidesTable extends Migration
             $table->string('after');
             $table->string('before')->nullable();
             $table->string('seat');
-            $table->integer('user_id');
+            $table->string('user_id');
             $table->timestamps();
         });
     }

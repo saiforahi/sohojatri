@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Models\close_account;
-use App\Models\user;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

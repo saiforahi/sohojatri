@@ -174,9 +174,12 @@
                             <td>{{$verification->user_id}}</td>
                             <td>{{UserNameIs($verification->user_id)}}</td>
                              <td>{{date('d-m-y', strtotime($verification->created_at))}}</td>
-                            <td> @if(isset($verification->nid_status)&& $verification->nid_status==0 ) NID
-                                @elseif(isset($verification->passport_status) && $verification->passport_status==0) Passport
-                                @elseif(isset($verification->driving_status)&& $verification->driving_status==0) Driving @endif</td> 
+                            <td> 
+                              @if(isset($verification->nid_status)&& $verification->nid_status==0 ) NID
+                              @elseif(isset($verification->passport_status) && $verification->passport_status==0) Passport
+                              @elseif(isset($verification->driving_status)&& $verification->driving_status==0) Driving 
+                              @endif
+                            </td> 
 
                             <td>@if($verification->existing) {{ $verification->existing }} @else NULL @endif
                             

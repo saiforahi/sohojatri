@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\VerifyOTP;
 use App\Models\Validation;
 use Exception;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
@@ -23,15 +24,13 @@ class AuthController extends Controller
         'lname' => 'required|string|between:2,100',
         'email' => 'required|string|email|max:100|unique:users,email',
         "phone" => ['required','regex:/(^(\+8801|8801|01|008801))[1|3-9]{1}(\d){8}$/','max:11','min:11','unique:users,phone'],
-        'day' => 'required|string',
-        'month' => 'required|string',
-        'year' => 'required|string',
         'gender' => 'required|string',
         'password' => 'required|string|min:8',
+        'dob'=> 'required|date|date_format:Y-m-d|before:today'
     ];
     
     public function __construct() {
-        $this->middleware('auth:sanctum', ['except' => ['login','register']]);
+        $this->middleware('auth:sanctum', ['except' => ['login','register','verifyOTP','resendOTP']]);
     }
     public function validator($data,$rules){
         return Validator::make($data, $data);
@@ -68,10 +67,67 @@ class AuthController extends Controller
         }
         
     }
-    public function verifyOTP(){
+    public function resendOTP(Request $request){
+        $validator=Validator::make($request->all(),[
+            'user_id'=>'required|exists:users,user_id',
+        ]);
+        if($validator->fails()){                                            //validating general registration rules
+            return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
+        }
         try{
-
-            return response()->json(['success'=>true,'message'=>'OTP Verified!',"data"=>$user],200);
+            Validation::where('fk_user_id',$request->user_id)->delete();
+            $user=User::where('user_id',$request->user_id)->first();
+            $otp=random_int(100000, 999999);
+            Validation::create([
+                'fk_user_id'=>$request->user_id,
+                'destination'=>$user->email,
+                'validation_type'=>'email',
+                'code'=>$otp
+            ]);
+            Mail::to($user->email)->send(new VerifyOTP($otp,$user->name));
+            return response()->json(['success'=>true,'message'=>'OTP sent!'],200);
+        }
+        catch(Exception $e){
+            return response()->json(['success'=>false,'errors'=>$e->getMessage()], 500);
+        }
+    }
+    public function resetPassword(Request $request){
+        $validator=Validator::make($request->all(),[
+            'old_password'=>'required|min:8',
+            'new_password'=>'required|min:8'
+        ]);
+        if($validator->fails()){                                            //validating general registration rules
+            return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
+        }
+        try{
+            if(Hash::check($request->old_password,FacadesAuth::user()->password)){
+                $user=User::findOrFail(FacadesAuth::user()->id);
+                $user->password=Hash::make($request->new_password);
+                $user->save();
+            }
+            return response()->json(['success'=>true,'message'=>'Your password has been reset!'],200);
+        }
+        catch(Exception $e){
+            return response()->json(['success'=>false,'errors'=>$e->getMessage()], 500);
+        }
+    }
+    public function verifyOTP(Request $request){
+        $validator=Validator::make($request->all(),[
+            'user_id'=>'required|exists:users,user_id',
+            'otp_code'=>'required|string|max:6|min:6'
+        ]);
+        if($validator->fails()){                                            //validating general registration rules
+            return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
+        }
+        try{
+            if(Validation::where(['fk_user_id'=>$request->user_id,'code'=>$request->otp_code])->exists()){
+                Validation::where(['fk_user_id'=>$request->user_id,'code'=>$request->otp_code])->delete();
+                User::where('user_id',$request->user_id)->update([
+                    'email_verified_at'=> date("Y-m-d H:i:s")
+                ]);
+                return response()->json(['success'=>true,'message'=>'OTP Verified!'],200);
+            }
+            return response()->json(['success'=>false,'message'=>'Invalid code!'],422);
         }
         catch(Exception $e){
             return response()->json(['success'=>false,'errors'=>$e->getMessage()], 500);
@@ -84,8 +140,19 @@ class AuthController extends Controller
         }
 
         try{
-            $user = User::create(array_merge($validator->validated(),['password' => bcrypt($request->password),'user_id'=>date('Y').date('m').date('d').User::all()->count()]));
-            // $user->password=Hash::make($request->passowrd);
+            //date of birth extraction
+            $time=strtotime($request->dob);
+            $day=date("d",$time);
+            $month=date("m",$time);
+            $year=date("Y",$time);
+            //extraction ends
+            $user = User::create(array_merge($request->except('dob'),[
+                'day'=>$day,
+                'month'=>$month,
+                'year'=>$year,
+                'password' => bcrypt($request->password),
+                'user_id'=>date('Y').date('m').date('d').User::all()->count()
+            ]));
             if($request->hasFile('image') && $request->file('image')->isValid()){
                 $file = new \stdClass();
                 if ($file = $request->file('image')) {
@@ -99,14 +166,13 @@ class AuthController extends Controller
                 }
             }
             $user->save();
-            $otp=random_int(100000, 999999);
-            Validation::create([
+            $validation=Validation::create([
                 'fk_user_id'=>$user->user_id,
                 'destination'=>$user->email,
                 'validation_type'=>'email',
-                'code'=>$otp
+                'code'=>random_int(100000, 999999)
             ]);
-            Mail::to($user->email)->send(new VerifyOTP($otp,$user->name));
+            // Mail::to($user->email)->send(new VerifyOTP($validation->code,$user->name));
             
             return response()->json([
                 'success' => true,

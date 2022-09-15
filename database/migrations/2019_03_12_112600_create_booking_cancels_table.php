@@ -15,7 +15,8 @@ class CreateBookingCancelsTable extends Migration
     {
         Schema::create('booking_cancels', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
+            $table->string('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users');
             $table->string('tracking');
             $table->string('reason');
             $table->string('message');

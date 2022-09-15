@@ -1,6 +1,8 @@
 /node_modules
 /public/build
 /public/hot
+/public/nid
+/public/public
 /public/storage
 /storage/*.key
 /vendor
@@ -14,3 +16,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+*.zip
+.env.zip

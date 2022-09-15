@@ -18,7 +18,8 @@ class CreateCloseAccountsTable extends Migration
             $table->string('reason');
             $table->string('recommend');
             $table->string('improve',9999);
-            $table->integer('user_id');
+            $table->string('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users');
             $table->timestamps();
         });
     }
