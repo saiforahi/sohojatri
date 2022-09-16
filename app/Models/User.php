@@ -22,6 +22,6 @@ class User extends Authenticatable
     ];
 
     public function verifications(){
-        re
+        return $this->hasOne(verification::class);
     }
 }

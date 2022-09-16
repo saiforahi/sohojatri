@@ -117,10 +117,13 @@
                         @if (Session::has('userId'))
                             <li class="nav-item submenu user-submenu dropdown"
                                 style="overflow: visible;max-height: unset;z-index:1000;position: relative;background-color:transparent">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-haspopup="true" aria-expanded="false">
-                                    <img class="user-avatar rounded-circle" width="70px" height="70px"
-                                         src="{{userInformation(Session('userId'),'image')}}">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    @if(userInformation(Session('userId'),'image')!=null)
+                                    <img class="user-avatar rounded-circle" width="40px" height="40px" src="{{userInformation(Session('userId'),'image')}}">
+                                    @else
+                                    <img class="user-avatar rounded-circle" width="40px" height="40px" src="{{asset("img/avatar.png")}}">
+                                    @endif
+                                    
                                 </a>
                                 <ul class="dropdown-menu pro-droupdown" style="margin-left: -122px">
                                     <li class="nav-item"><a class="user-link" href="{{route('sp.home')}}"><i
