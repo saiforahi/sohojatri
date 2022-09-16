@@ -20,4 +20,8 @@ class User extends Authenticatable
         'updated_at'=>'datetime:Y-m-d h:i:s A',
         'deleted_at'=>'datetime:Y-m-d h:i:s A'
     ];
+
+    public function verifications(){
+        re
+    }
 }

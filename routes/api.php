@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\frontend\RequestController;
+use App\Http\Controllers\frontend\VerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -32,6 +33,7 @@ Route::middleware(['auth:sanctum'])->prefix('ride')->group(function () {
 Route::middleware(['auth:sanctum'])->prefix('user')->group(function () {
     Route::put('/details/update',[UserController::class,'user_details_update']);
     Route::post('/reset-password',[App\Http\Controllers\api\auth\AuthController::class,'resetPassword']);
+    Route::post('/verification',[VerificationController::class,'SpVerificationPost_API']);
     Route::get('details', function (Request $request) {
         return response()->json(['success'=>true,'message'=>'User details','data'=>$request->user()],200);
     });
