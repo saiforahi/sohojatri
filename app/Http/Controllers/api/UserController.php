@@ -37,7 +37,7 @@ class UserController extends Controller
                 return response()->json([
                     'success' => true,
                     'message'=> 'User details updated',
-                    'data'=>Auth::user()
+                    'data'=>$user
                 ], 200);
             }
             else{

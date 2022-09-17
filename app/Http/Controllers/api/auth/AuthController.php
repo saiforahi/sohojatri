@@ -17,6 +17,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Arr;
 
 class AuthController extends Controller
 {
@@ -105,8 +106,9 @@ class AuthController extends Controller
                 $user=User::findOrFail(FacadesAuth::user()->id);
                 $user->password=Hash::make($request->new_password);
                 $user->save();
+                return response()->json(['success'=>true,'message'=>'Your password has been reset!'],200);
             }
-            return response()->json(['success'=>true,'message'=>'Your password has been reset!'],200);
+            return response()->json(['success'=>false,'message'=>'Password mismatch!'],404);
         }
         catch(Exception $e){
             return response()->json(['success'=>false,'errors'=>$e->getMessage()], 500);
@@ -123,11 +125,12 @@ class AuthController extends Controller
         try{
             if(Validation::where(['fk_user_id'=>$request->user_id,'code'=>$request->otp_code])->exists()){
                 Validation::where(['fk_user_id'=>$request->user_id,'code'=>$request->otp_code])->delete();
-                User::where('user_id',$request->user_id)->update([
-                    'email_verified_at'=> date("Y-m-d H:i:s")
-                ]);
-                $verification=verification::updateOrCreate(['user_id'=>Auth::user()->user_id],['email'=>1]);
-                return response()->json(['success'=>true,'message'=>'OTP Verified!'],200);
+                $user=User::where('user_id',$request->user_id)->first();
+                $user->email_verified_at=date("Y-m-d H:i:s");
+                $user->save();
+                $verification=verification::updateOrCreate(['user_id'=>$user->user_id],['email'=>1]);
+                $token=$user->createToken('api_token')->plainTextToken;
+                return response()->json(['success'=>true,'token'=>$token,'message'=>'OTP verified & User Signed in!',"data"=>$user],200);
             }
             return response()->json(['success'=>false,'message'=>'Invalid code!'],422);
         }
@@ -138,7 +141,8 @@ class AuthController extends Controller
     public function register(Request $request) {
         $validator=Validator::make($request->all(),$this->general_reg_rules);
         if($validator->fails()){                                            //validating general registration rules
-            return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
+            // return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
+            return response()->json(['success'=>false,'errors'=>Arr::first(Arr::flatten($validator->messages()->get('*')))], 422);
         }
 
         try{
@@ -174,7 +178,7 @@ class AuthController extends Controller
                 'validation_type'=>'email',
                 'code'=>random_int(100000, 999999)
             ]);
-            // Mail::to($user->email)->send(new VerifyOTP($validation->code,$user->name));
+            Mail::to($user->email)->send(new VerifyOTP($validation->code,$user->name));
             
             return response()->json([
                 'success' => true,

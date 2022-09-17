@@ -26,7 +26,7 @@ class UserUpdateRequest extends FormRequest
         return [
             'name' => 'required|string|between:2,100',
             'lname' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users,email',
+            'email' => 'sometimes|nullable|string|email|max:100|unique:users,email',
             'bio' => 'sometimes|nullable|string',
             'dob'=> 'required|date|date_format:Y-m-d|before:today'
         ];
