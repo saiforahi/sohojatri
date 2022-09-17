@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\VerifyOTP;
 use App\Models\Validation;
+use App\Models\verification;
 use Exception;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Validator;
@@ -125,6 +126,7 @@ class AuthController extends Controller
                 User::where('user_id',$request->user_id)->update([
                     'email_verified_at'=> date("Y-m-d H:i:s")
                 ]);
+                $verification=verification::updateOrCreate(['user_id'=>Auth::user()->user_id],['email'=>1]);
                 return response()->json(['success'=>true,'message'=>'OTP Verified!'],200);
             }
             return response()->json(['success'=>false,'message'=>'Invalid code!'],422);

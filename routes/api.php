@@ -40,6 +40,7 @@ Route::middleware(['auth:sanctum'])->prefix('user')->group(function () {
     Route::prefix('cars')->group(function () {
         Route::post('add', [UserController::class, 'add_car']);
         Route::get('all', [UserController::class, 'my_cars']);
+        Route::delete('remove/{car}', [UserController::class, 'remove_car']);
     });
 });
 

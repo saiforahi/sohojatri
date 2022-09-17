@@ -118,8 +118,26 @@ class UserController extends Controller
     // my cars
     public function my_cars(){
         try{
-            $cars=car::with('brand')->where('user_id',Auth::user()->id)->get();
+            $cars=car::with('brand')->where('user_id',Auth::user()->user_id)->get();
             return response()->json(['success'=>true,'message'=>'My cars','data'=>$cars], 200);
+        }
+        catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // remove user car
+    public function remove_car(car $car){
+        try{
+            if($car->delete()){
+                return response()->json(['success'=>true,'message'=>'Your car has been deleted'], 200);
+            }
+            else{
+                return response()->json(['success'=>true,'message'=>'Something went wrong'], 500);
+            }
         }
         catch(Exception $e){
             return response()->json([
