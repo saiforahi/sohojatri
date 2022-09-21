@@ -146,4 +146,23 @@ class UserController extends Controller
             ], 500);
         }
     }
+    // mark user car active
+    public function mark_car_active(Request $req){
+        try{
+            $req->validate([
+                'car_id'=>'required',
+                'status'=>'required|numeric'
+            ]);
+            car::where('id',$req->car_id)->update([
+                'status'=>$req->status
+            ]);
+            return response()->json(['success'=>true,'message'=>'Status has been updated','data'=>car::findOrFail($req->car_id)], 200);
+        }
+        catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

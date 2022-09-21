@@ -12,6 +12,7 @@ use App\Models\verification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session as FacadesSession;
 use Session;
 
 class PostController extends Controller
@@ -53,36 +54,13 @@ class PostController extends Controller
 
     public function RidePost(Request $request)
     {
-
-//        $input = $request->departure.' '.$request->d_time.' '.$request->d_time2;
-//        $date = Carbon::createFromFormat('m/d/Y h A', $input);
-//        $placeInfo = GetDrivingDistance($request->lat,$request->lng,$request->lat2,$request->lng2);
-//        echo $placeInfo['time'];
-//        echo date_add($date, date_interval_create_from_date_string($placeInfo['time']));
-//
-//        die();
-        if (Session::get('userId') == null && Session::get('phone') == null) {
-            Session::flash('message', 'Submit this form Login first.');
+        if (FacadesSession::get('userId') == null && FacadesSession::get('phone') == null) {
+            FacadesSession::flash('message', 'Submit this form Login first.');
             return redirect('post-ride');
         }
 
-        $validation = verification::where('user_id', Session('userId'))->first();
-
-//        if ($validation) {
-//            if ($validation->nid_status != 1 && $validation->passport_status != 1 && $validation->driving_status != 1) {
-//                Session::flash('message', 'Submit this form verifications NID, Passport and Driving licence.');
-//                return redirect('post-ride');
-//            }
-//            if ($validation->phone == null) {
-//                Session::flash('message', 'Submit this form verifications Phone Number.');
-//                return redirect('post-ride');
-//            }
-//        } else {
-//            Session::flash('message', 'Submit this form verifications Phone Number.');
-//            return redirect('post-ride');
-//        }
-
-
+        $validation = verification::where('user_id', FacadesSession::get('userId'))->first();
+        dd($request->all());
         $request->validate([
             'location' => 'required',
             'location2' => 'required',
@@ -91,7 +69,7 @@ class PostController extends Controller
         ]);
 
         if ($request->departure < date("m / d / Y")) {
-            Session::flash('message', 'Invalid date');
+            FacadesSession::flash('message', 'Invalid date');
             return redirect('post-ride');
         }
 
@@ -236,7 +214,7 @@ class PostController extends Controller
 
         }
 
-        Session::flash('message', 'Request ride insert successfully');
+        FacadesSession::flash('message', 'Request ride insert successfully');
         return redirect('post-ride2/' . $insert->id);
 
     }
@@ -273,7 +251,7 @@ class PostController extends Controller
             $list++;
         }
 
-        Session::flash('message', 'Request ride insert successfully');
+        FacadesSession::flash('message', 'Request ride insert successfully');
         return redirect('post-ride3/' . $request->id);
     }
 
@@ -294,13 +272,13 @@ class PostController extends Controller
         $post->condition = $request->condition;
         $post->save();
 
-        Session::flash('message', 'Post ride insert successfully, Wait until admin approval');
+        FacadesSession::flash('message', 'Post ride insert successfully, Wait until admin approval');
         return redirect('all-ride');
     }
 
     public function upcomingRideIndex()
     {
-        $post = post_ride::where('user_id', Session('userId'))->where('departure', '>=', date("m / d / Y"))->where('status', 1)->orderBy('id', 'desc')->get();
+        $post = post_ride::where('user_id', FacadesSession::get('userId'))->where('departure', '>=', date("m / d / Y"))->where('status', 1)->orderBy('id', 'desc')->get();
         return view('frontend.sp_panel.rides_offered.upcoming_ride', compact('post'));
     }
 
@@ -341,7 +319,7 @@ class PostController extends Controller
         $insert->d_time2 = $request->d_time2;
         $insert->save();
 
-        Session::flash('message', 'Post time update successfully, Wait until admin approval');
+        FacadesSession::flash('message', 'Post time update successfully, Wait until admin approval');
         return redirect()->back();
     }
 
@@ -355,7 +333,7 @@ class PostController extends Controller
 
     public function ArchivedRideIndex()
     {
-        $post = post_ride::where('user_id', Session('userId'))->where('departure', '<', date("m / d / Y"))->where('status', 1)->orderBy('id', 'desc')->get();
+        $post = post_ride::where('user_id', FacadesSession::get('userId'))->where('departure', '<', date("m / d / Y"))->where('status', 1)->orderBy('id', 'desc')->get();
         return view('frontend.sp_panel.rides_offered.archived_rides', compact('post'));
     }
 

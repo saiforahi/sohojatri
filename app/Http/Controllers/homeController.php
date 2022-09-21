@@ -55,11 +55,11 @@ class homeController extends Controller
                 if (!$number) {
                     return redirect()->back()->withErrors(['Invalid email and phone number']);
                 }
-                $user = user::where('phone', $number)->first();
+                $user = user::where('phone', $phone)->first();
             }
             if (!empty($user)) {
                 if ($user && Hash::check($request->password, $user->password)) {
-
+                    $user->token = $user->createToken('api_token')->plainTextToken;
                     $user->logincount += 1;
                     if ($request->remember_me) {
                         setcookie('userId', $user->user_id, time() + (86400 * 30), "/");
@@ -116,7 +116,7 @@ class homeController extends Controller
                     return redirect()->back()->withErrors(['Invalid email and phone number']);
                 }
 
-                $check = User::where('phone', $number)->first();
+                $check = User::where('phone', $phone)->first();
                 if ($check) {
                     return redirect()->back()->withErrors(['This number already used try another']);
                 } else $user->phone = $number;
@@ -325,8 +325,13 @@ class homeController extends Controller
 
     public function LogoutUser()
     {
+        $user=User::where('user_id',Session::get('userId'))->first();
+        $user->tokens()->delete();
+        $user->token=null;
+        $user->save();
         Session::forget('token');
         Session::forget('userId');
+        
         setcookie('userId', '', time() - 3600);
         setcookie('token', '', time() - 3600);
         return redirect('/');

@@ -101,7 +101,7 @@
             <div class="row">
                 <div class="col-lg-6 col-md-12">
                         Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-                        All rights reserved by <a class="text-success" href="#">sohojatri.xyz</a>
+                        All rights reserved by <a class="text-success" href="#">yoyocar.xyz</a>
                 </div>
                 <div class="col-lg-6 col-md-12 text-right">
                     Teams of use provicy | Security Statement
