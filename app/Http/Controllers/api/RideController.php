@@ -9,6 +9,7 @@ use App\Models\stopover;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class RideController extends Controller
 {
@@ -45,7 +46,7 @@ class RideController extends Controller
             $insert->duration = $placeInfo['time'];
             $insert->car_id = $request->car;
             $insert->driver = $request->driver;
-            $insert->user_id = Session('userId');
+            $insert->user_id = Auth::user()->id;
             $insert->save();
 
             $this->RidePostAddress($request->lat, $request->lng, $request->location, $serial, $insert->id);
@@ -139,8 +140,6 @@ class RideController extends Controller
                     $insert1->etime = date_format($date, 'h');
                     $insert1->etime2 = date_format($date, 'A');
                     $insert1->save();
-
-
                 }
             }
 
@@ -160,7 +159,6 @@ class RideController extends Controller
                         $insert1->save();
                     }
                 }
-
             }
             return response()->json(['success'=>true,'message'=>'Ride posted'],200);
         }

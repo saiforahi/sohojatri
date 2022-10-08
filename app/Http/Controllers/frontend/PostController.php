@@ -169,7 +169,6 @@ class PostController extends Controller
                 break;
             }
             for ($l = $i + 1; $l < $total; $l++) {
-
                 $insert1 = new stopover;
                 $insert1->going = $postCode[$i];
                 $insert1->target = $postCode[$l];
@@ -190,8 +189,6 @@ class PostController extends Controller
                 $insert1->etime = date_format($date, 'h');
                 $insert1->etime2 = date_format($date, 'A');
                 $insert1->save();
-
-
             }
         }
 
