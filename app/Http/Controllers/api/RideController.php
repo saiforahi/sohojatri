@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Condition;
 use App\Models\post_ride;
 use App\Models\post_ride_address;
+use App\Models\ride_setting;
 use App\Models\stopover;
 use Exception;
 use Illuminate\Http\Request;
@@ -14,8 +16,46 @@ use Illuminate\Support\Facades\Auth;
 class RideController extends Controller
 {
     //
+    public function RidePostAddress($lat, $lng, $location, $serial, $post)
+    {
+        $insert = new post_ride_address;
+        $insert->lat = $lat;
+        $insert->lng = $lng;
+        $insert->location = $location;
+        $insert->serial = $serial;
+        $insert->post_id = $post;
+        $insert->save();
+    }
+    public function GetPlaceDisTime($going, $target, $id)
+    {
+        $s_lat = PostRideAddress($id, $going, 'lat');
+        $s_lng = PostRideAddress($id, $going, 'lng');
+        $e_lat = PostRideAddress($id, $target, 'lat');
+        $e_lng = PostRideAddress($id, $target, 'lng');
 
-    public function post_ride(Request $request){
+        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=" . $s_lat . "," . $s_lng . "&destinations=" . $e_lat . "," . $e_lng . "&key=" . env('MAP_KEY');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_PROXYPORT, 3128);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response_a = json_decode($response, true);
+        if(isset($response_a['rows'][0]['elements'][0]['distance'])){
+            $dist = $response_a['rows'][0]['elements'][0]['distance']['text'];
+            $time = $response_a['rows'][0]['elements'][0]['duration']['text'];
+        }
+        else{
+            $dist=0;
+            $time = 0;
+        }
+
+        return array('distance' => $dist, 'time' => $time);
+    }
+
+    public function post_ride_step1(Request $request){
         try{
             $request->validate([
                 'location' => 'required|string',
@@ -48,6 +88,7 @@ class RideController extends Controller
             $insert->driver = $request->driver;
             $insert->user_id = Auth::user()->id;
             $insert->save();
+            $posted_ride = $insert;
 
             $this->RidePostAddress($request->lat, $request->lng, $request->location, $serial, $insert->id);
             $serial++;
@@ -112,14 +153,12 @@ class RideController extends Controller
                 array_push($postCode, $rides->serial);
             }
 
-
             $total = count($postCode);
             for ($i = 0; $i < $total; $i++) {
                 if ($i == $total - 1) {
                     break;
                 }
                 for ($l = $i + 1; $l < $total; $l++) {
-
                     $insert1 = new stopover();
                     $insert1->going = $postCode[$i];
                     $insert1->target = $postCode[$l];
@@ -134,8 +173,8 @@ class RideController extends Controller
                     $insert1->distance = $placeInfo['distance'];
                     $insert1->duration = $placeInfo['time'];
                     $input = $request->departure . ' ' . $request->d_time . ' ' . $request->d_time2;
-                    $date = Carbon::createFromFormat('m/d/Y h A', $input, 'Asia/Dhaka');
-                    date_add($date, date_interval_create_from_date_string($placeInfo['time']));
+                    $date = Carbon::createFromFormat('Y-m-d h A', $input, 'Asia/Dhaka')->addDays($placeInfo['time']);
+                    // date_add($date, date_interval_create_from_date_string($placeInfo['time']));
                     $insert1->edate = date_format($date, 'm/d/Y');
                     $insert1->etime = date_format($date, 'h');
                     $insert1->etime2 = date_format($date, 'A');
@@ -160,10 +199,62 @@ class RideController extends Controller
                     }
                 }
             }
-            return response()->json(['success'=>true,'message'=>'Ride posted'],200);
+            $ride = $posted_ride;
+            $stopovers = stopover::where('post_id', $posted_ride->id)->get();
+            $ride_settings = ride_setting::first();
+            $data = array('ride' => $posted_ride,'stopovers'=> $stopovers,'ride_settings'=>$ride_settings);
+            return response()->json(['success'=>true,'message'=>'Ride posted','data'=>$data],200);
         }
         catch(Exception $e){
-            return response()->json(['success'=>false,'errors'=>$e->getMessage()], 404);
+            return response()->json(['success'=>false,'errors'=>'at line '.$e->getLine().' '.$e->getMessage(),'data'=>$e->getTrace()], 404);
         }
+    }
+
+    // step 2
+
+    public function post_ride_step2(Request $request)
+    {
+        try{
+            // dd($request->all());
+            $stopover = stopover::where('post_id', $request->id)->get();
+            $post = post_ride::find($request->id);
+            $post->seat = $request->seat;
+            $post->save();
+
+            $chks = (array)$request->price;
+            $list = 0;
+            foreach ($stopover as $stopovers) {
+                $insert = stopover::find($stopovers->id);
+                $insert->price = $chks[$list];
+                $insert->save();
+                $list++;
+            }
+            $conditions = Condition::all();
+            $data= array('conditions'=>$conditions,'ride'=>$post,'stopovers'=>stopover::where('post_id', $request->id)->get());
+            return response()->json(['success'=>true,'message'=>'Ride fares posted','data'=>$data],200);
+        }
+        catch(Exception $e){
+            return response()->json(['success'=>false,'errors'=>'at line '.$e->getLine().' '.$e->getMessage(),'data'=>$e->getTrace()], 404);
+        }
+        
+    }
+
+    // step 3
+
+    public function post_ride_step3(Request $request)
+    {
+        try{
+            $request->merge([
+                'condition' => implode(',', (array)$request->get('condition'))
+            ]);
+            $post = post_ride::find($request->id);
+            $post->condition = $request->condition;
+            $post->save();
+            return response()->json(['success'=>true,'message'=>'Ride conditions posted','data'=>$post],200);
+        }
+        catch(Exception $e){
+            return response()->json(['success'=>false,'errors'=>'at line '.$e->getLine().' '.$e->getMessage(),'data'=>$e->getTrace()], 404);
+        }
+        
     }
 }

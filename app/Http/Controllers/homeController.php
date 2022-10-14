@@ -185,7 +185,7 @@ class homeController extends Controller
                 $usernew->facebook_id = $user->getId();
                 $usernew->token = $user->token;
                 $usernew->email = $user->getEmail();
-                $usernew->emailIsVerified = 1;
+                $usernew->email_verified_at = date("Y-m-d H:i:s");
                 $usernew->save();
 
                 Session::put('token', $user->token);
@@ -217,7 +217,7 @@ class homeController extends Controller
             $usernew->image = $user->getAvatar();
             $usernew->token = $user->token;
             $usernew->email = $user->getEmail();
-            $usernew->emailIsVerified = 1;
+            $usernew->email_verified_at = date("Y-m-d H:i:s");
             $usernew->save();
 
             Session::put('token', $user->token);

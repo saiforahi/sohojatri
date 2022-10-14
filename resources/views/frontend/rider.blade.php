@@ -37,7 +37,7 @@
                             <p class="text-justify ml-3">
                                 {!!userInformation($user->user_id,'phoneIsVerified') == 1 ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
                                 Phone Verified<br>
-                                {!!userInformation($user->user_id,'emailIsVerified') == 1 ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
+                                {!!userInformation($user->user_id,'email_verified_at') != null ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
                                 Email Verified<br>
                                 {!!verification($user->user_id)->nid_status == 1 ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
                                 NID Verified<br>

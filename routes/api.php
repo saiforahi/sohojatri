@@ -32,6 +32,11 @@ Route::middleware(['auth:sanctum'])->prefix('ride')->group(function () {
     Route::post('request', [RequestController::class, 'RequestPostAPI']);
     Route::get('all', [RequestController::class, 'RequestPostAPI']);
     Route::post('post', [RideController::class, 'post_ride']);
+    Route::prefix('post')->group(function () {
+        Route::post('step1', [RideController::class, 'post_ride_step1']);
+        Route::post('step2', [RideController::class, 'post_ride_step2']);
+        Route::post('step3', [RideController::class, 'post_ride_step3']);
+    });
 });
 Route::middleware(['auth:sanctum'])->prefix('user')->group(function () {
     Route::put('/details/update',[UserController::class,'user_details_update']);

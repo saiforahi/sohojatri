@@ -396,12 +396,12 @@
                     </div>
                     <div class="card">
                         <div class="card-header verifiedmassage border-all" id="headingThree">
-                            @if($user->emailIsVerified == 0)<i class="fas fa-exclamation-circle"
+                            @if($user->email_verified_at == null)<i class="fas fa-exclamation-circle"
                                                                style="color:orange"></i> Please verify your Email
                             <p> Other members will be more likely to choose to travel with you!</p>
                             @endif
 
-                            @if($user->emailIsVerified == 1)
+                            @if($user->email_verified_at != null)
                                 Email verified <br> <p class="inline-verified-massage verify-heading"> Your Email is:
                                     <strong> {{$user->email}} </strong><br>
                                     Now that you've verified your email address, we can easily contact you if needed.
@@ -412,7 +412,7 @@
                         <!--   <i class="fas fa-exclamation-circle" style="color:orange"></i>
                                                      Please Verify Your Email Id: {{$verification->email}}<br>
                            <p> Other members will be more likely to choose to travel with you!</p> -->
-                            @if($user->emailIsVerified == 0)
+                            @if($user->email_verified_at == null)
                                 <button
                                     class="btn btn-sm pull-right badge badge-pill badge-warning pull-right m-1 mr-5 verify"
                                     type="button" data-toggle="collapse" style="padding: 12px 28px 11px 36px;"
@@ -420,7 +420,7 @@
                                     Verify
                                 </button>
                             @endif
-                            @if($user->emailIsVerified == 1)
+                            @if($user->email_verified_at != null)
                                 <span class="badge badge-pill  pull-right m-1 mr-5 " data-toggle="tooltip"
                                       data-placement="top" title="Your Email is Verified"> <i class="fa fa-check-circle"
                                                                                               aria-hidden="true"
@@ -430,7 +430,6 @@
                         <div id="collapseFour" class="collapse" aria-labelledby="headingThree"
                              data-parent="#accordionExample">
                             <div class="card-body">
-
                                 <form action="{{route('sp.verification')}}" method="post" class="form-inline">
                                     {{csrf_field()}}
                                     <div class="form-group mx-sm-3 mb-2 w-50">

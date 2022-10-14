@@ -60,14 +60,12 @@ class PostController extends Controller
         }
 
         $validation = verification::where('user_id', FacadesSession::get('userId'))->first();
-        dd($request->all());
         $request->validate([
             'location' => 'required',
             'location2' => 'required',
             'departure' => 'required',
             'car' => 'required',
         ]);
-
         if ($request->departure < date("m / d / Y")) {
             FacadesSession::flash('message', 'Invalid date');
             return redirect('post-ride');
@@ -233,7 +231,6 @@ class PostController extends Controller
 
     public function RidePostPrice(Request $request)
     {
-
         $stopover = stopover::where('post_id', $request->id)->get();
         $post = post_ride::find($request->id);
         $post->seat = $request->seat;
@@ -261,10 +258,11 @@ class PostController extends Controller
 
     public function RidePostCondition(Request $request)
     {
+        
         $request->merge([
             'condition' => implode(',', (array)$request->get('condition'))
         ]);
-
+        dd($request->all());
         $post = post_ride::find($request->id);
         $post->condition = $request->condition;
         $post->save();

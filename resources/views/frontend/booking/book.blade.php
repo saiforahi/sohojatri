@@ -173,7 +173,7 @@
                                             <td>{{date('Y - M, d',strtotime(UserCreateat($bookings->user_id)))}}</td>
                                             <td>
                                                 {!!userInformation($bookings->user_id,'phoneIsVerified') == 1 ? '<i class="fas fa-check text-success"></i> Phone Verified<br>' : ''!!}
-                                                {!!userInformation($bookings->user_id,'emailIsVerified') == 1 ? '<i class="fas fa-check text-success"></i> Email Verified<br>' : ''!!}
+                                                {!!userInformation($bookings->user_id,'email_verified_at') != null ? '<i class="fas fa-check text-success"></i> Email Verified<br>' : ''!!}
                                                 {!!verification($bookings->user_id)->nid_status == 1 ? '<i class="fas fa-check text-success"></i> NID Verified<br>' : ''!!}
                                                 {!!verification($bookings->user_id)->passport_status == 1 ? '<i class="fas fa-check text-success"></i> Passport Verified<br>' : ''!!}
                                                 {!!verification($bookings->user_id)->driving_status == 1 ? '<i class="fas fa-check text-success"></i> Driving Licence Verified<br>' : ''!!}
@@ -229,7 +229,7 @@
                             <p class="text-justify ml-3">
                                 {!!userInformation($post->user_id,'phoneIsVerified') == 1 ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
                                 Phone Verified<br>
-                                {!!userInformation($post->user_id,'emailIsVerified') == 1 ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
+                                {!!userInformation($post->user_id,'email_verified_at') !=null ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
                                 Email Verified<br>
                                 {!!verification($post->user_id)->nid_status == 1 ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
                                 NID Verified<br>

@@ -142,7 +142,7 @@ class VerificationController extends Controller
                     }
                     $search->delete();
                     $account->email = $email;
-                    $account->emailIsVerified = 1;
+                    $account->email_verified_at = date("Y-m-d H:i:s");
                     $account->save();
                     return redirect('sp-verification');
                 }
@@ -307,7 +307,7 @@ class VerificationController extends Controller
                     }
                     $search->delete();
                     $account->email = $email;
-                    $account->emailIsVerified = 1;
+                    $account->email_verified_at = date("Y-m-d H:i:s");
                     $account->save();
                     return redirect('sp-verification');
                 }

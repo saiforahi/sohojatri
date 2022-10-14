@@ -23,8 +23,8 @@ class CreateStopoversTable extends Migration
             $table->string('date');
             $table->string('time');
             $table->string('time2');
-            $table->string('distance');
-            $table->string('duration');
+            $table->string('distance')->nullable();
+            $table->string('duration')->nullable();
             $table->string('edate')->nullable();
             $table->string('etime')->nullable();
             $table->string('etime2')->nullable();
