@@ -201,6 +201,10 @@ class RideController extends Controller
             }
             $ride = $posted_ride;
             $stopovers = stopover::where('post_id', $posted_ride->id)->get();
+            foreach($stopovers as $stopover){
+                $stopover['start'] = PostRideAddress($stopover->post_id,$stopover->going,'location');
+                $stopover['end'] = PostRideAddress($stopover->post_id,$stopover->target,'location');
+            }
             $ride_settings = ride_setting::first();
             $data = array('ride' => $posted_ride,'stopovers'=> $stopovers,'ride_settings'=>$ride_settings);
             return response()->json(['success'=>true,'message'=>'Ride posted','data'=>$data],200);
