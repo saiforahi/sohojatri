@@ -18,7 +18,7 @@
                           method="post" novalidate>
                         @csrf
                         <div id="intro" class="text-center">
-                            <h4 class="mb-2 h5">Create a Sohojatri account</h4>
+                            <h4 class="mb-2 h5">Create a YoYoCar account</h4>
                             <p class="mb-1">It's Quick and Easy</p>
                         </div>
                         @if ($errors->any())

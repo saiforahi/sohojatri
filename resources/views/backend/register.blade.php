@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Sohojatri | Registration Page</title>
+    <title>YoYoCar | Registration Page</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -84,7 +84,7 @@
 <script src="{{asset('framework/jquery/jquery-migrate.min.js')}}"></script>
 <script src="{{asset('framework/jquery-easing/jquery.easing.min.js')}}"></script>
 <!-- Bootstrap 4 -->
-<script src="{{asset('framework/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('framework/adminLTE/js/adminlte.min.js')}}"></script>
 <script>

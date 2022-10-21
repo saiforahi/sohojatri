@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class RideController extends Controller
 {
@@ -43,20 +44,20 @@ class RideController extends Controller
         $response = curl_exec($ch);
         curl_close($ch);
         $response_a = json_decode($response, true);
-        if(isset($response_a['rows'][0]['elements'][0]['distance'])){
+        if (isset($response_a['rows'][0]['elements'][0]['distance'])) {
             $dist = $response_a['rows'][0]['elements'][0]['distance']['text'];
             $time = $response_a['rows'][0]['elements'][0]['duration']['text'];
-        }
-        else{
-            $dist=0;
+        } else {
+            $dist = 0;
             $time = 0;
         }
 
         return array('distance' => $dist, 'time' => $time);
     }
 
-    public function post_ride_step1(Request $request){
-        try{
+    public function post_ride_step1(Request $request)
+    {
+        try {
             $request->validate([
                 'location' => 'required|string',
                 'location2' => 'required',
@@ -201,16 +202,15 @@ class RideController extends Controller
             }
             $ride = $posted_ride;
             $stopovers = stopover::where('post_id', $posted_ride->id)->get();
-            foreach($stopovers as $stopover){
-                $stopover['start'] = PostRideAddress($stopover->post_id,$stopover->going,'location');
-                $stopover['end'] = PostRideAddress($stopover->post_id,$stopover->target,'location');
+            foreach ($stopovers as $stopover) {
+                $stopover['start'] = PostRideAddress($stopover->post_id, $stopover->going, 'location');
+                $stopover['end'] = PostRideAddress($stopover->post_id, $stopover->target, 'location');
             }
             $ride_settings = ride_setting::first();
-            $data = array('ride' => $posted_ride,'stopovers'=> $stopovers,'ride_settings'=>$ride_settings);
-            return response()->json(['success'=>true,'message'=>'Ride posted','data'=>$data],200);
-        }
-        catch(Exception $e){
-            return response()->json(['success'=>false,'errors'=>'at line '.$e->getLine().' '.$e->getMessage(),'data'=>$e->getTrace()], 404);
+            $data = array('ride' => $posted_ride, 'stopovers' => $stopovers, 'ride_settings' => $ride_settings);
+            return response()->json(['success' => true, 'message' => 'Ride posted', 'data' => $data], 200);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'errors' => 'at line ' . $e->getLine() . ' ' . $e->getMessage(), 'data' => $e->getTrace()], 404);
         }
     }
 
@@ -218,7 +218,7 @@ class RideController extends Controller
 
     public function post_ride_step2(Request $request)
     {
-        try{
+        try {
             // dd($request->all());
             $stopover = stopover::where('post_id', $request->id)->get();
             $post = post_ride::find($request->id);
@@ -234,31 +234,79 @@ class RideController extends Controller
                 $list++;
             }
             $conditions = Condition::all();
-            $data= array('conditions'=>$conditions,'ride'=>$post,'stopovers'=>stopover::where('post_id', $request->id)->get());
-            return response()->json(['success'=>true,'message'=>'Ride fares posted','data'=>$data],200);
+            $data = array('conditions' => $conditions, 'ride' => $post, 'stopovers' => stopover::where('post_id', $request->id)->get());
+            return response()->json(['success' => true, 'message' => 'Ride fares posted', 'data' => $data], 200);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'errors' => 'at line ' . $e->getLine() . ' ' . $e->getMessage(), 'data' => $e->getTrace()], 404);
         }
-        catch(Exception $e){
-            return response()->json(['success'=>false,'errors'=>'at line '.$e->getLine().' '.$e->getMessage(),'data'=>$e->getTrace()], 404);
-        }
-        
     }
 
     // step 3
 
     public function post_ride_step3(Request $request)
     {
-        try{
+        try {
             $request->merge([
                 'condition' => implode(',', (array)$request->get('condition'))
             ]);
             $post = post_ride::find($request->id);
             $post->condition = $request->condition;
             $post->save();
-            return response()->json(['success'=>true,'message'=>'Ride conditions posted','data'=>$post],200);
+            return response()->json(['success' => true, 'message' => 'Ride conditions posted', 'data' => $post], 200);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'errors' => 'at line ' . $e->getLine() . ' ' . $e->getMessage(), 'data' => $e->getTrace()], 404);
         }
-        catch(Exception $e){
-            return response()->json(['success'=>false,'errors'=>'at line '.$e->getLine().' '.$e->getMessage(),'data'=>$e->getTrace()], 404);
+    }
+
+    public function find_ride(Request $req)
+    {
+        try {
+            $rules = [
+                'lat' => 'required',
+                'lng' => 'required',
+                'location' => 'required',
+                'lat2' => 'required',
+                'lng2' => 'required',
+                'location2' => 'required',
+                'date' => 'required|date|after_or_equal:today',
+                'seat'=> 'required|numeric'
+            ];
+            $validator = Validator::make($req->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+            }
+            $userLat = $req->lat;
+            $userLng = $req->lng;
+            $userLoca = $req->location;
+            $userLat2 = $req->lat2;
+            $userLng2 = $req->lng2;
+            $userLoca2 = $req->location2;
+            $filter = true;
+            $stopovers = stopover::where('stopovers.date','>=',date('m/d/Y',strtotime($req->date)))->join('post_rides','post_rides.id','=','stopovers.post_id')->where('post_rides.e_lat',$req->lat2)->get();
+            // dd($stopover);
+            $setting = ride_setting::first();
+            $rides=[];
+            foreach ($stopovers as $stopover) {
+                $s_location = PostRideAddress($stopover->post_id, $stopover->going, 'location');
+                $e_location = PostRideAddress($stopover->post_id, $stopover->target, 'location');
+                $s_lat = PostRideAddress($stopover->post_id, $stopover->going, 'lat');
+                $s_lng = PostRideAddress($stopover->post_id, $stopover->going, 'lng');
+                $e_lat = PostRideAddress($stopover->post_id, $stopover->target, 'lat');
+                $e_lng = PostRideAddress($stopover->post_id, $stopover->target, 'lng');
+                //dd(date('Y-m-d',strtotime($stopovers->date)),date('Y-m-d',strtotime($after)));die();
+                if (distance($s_lat, $s_lng, $userLat, $userLng, "K") < $setting->search && distance($e_lat, $e_lng, $userLat2, $userLng2, "K") < $setting->search && seat($stopover->going,$stopover->target,$stopover->post_id,$stopover->date) <= $req->seat) {
+                    $time = $stopover->time.':00 '.$stopover->time2;
+                    $ride = array('departure'=>$s_location,'destination'=>$e_location);
+                    $driver=array('image'=>userInformation(getRide($stopover->post_id)->user_id,'image'),'name'=>userInformation(getRide($stopover->post_id)->user_id,'name'));
+                    $price_seat = array('price'=>$stopover->price,'seats'=>seat($stopover->going,$stopover->target,$stopover->post_id,$stopover->date));
+                    $conditions=Condition::whereIn('id',explode(",", getRide($stopover->post_id)->condition))->get();
+                    $rating=3;
+                    array_push($rides,array('time'=>$time,'ride'=>$ride,'driver'=>$driver,'price_seat'=>$price_seat,'conditions'=>$conditions,'rating'=>$rating));
+                }
+            }
+            return response()->json(['success' => true, 'message' => 'Ride conditions posted', "data" => array('rides' => $rides)], 200);
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'errors' => 'at line ' . $e->getLine() . ' ' . $e->getMessage(), 'data' => $e->getTrace()], 404);
         }
-        
     }
 }

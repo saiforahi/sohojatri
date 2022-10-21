@@ -173,10 +173,11 @@ class RideController extends Controller
         $before = $request->before;
         $seat = $request->seat;
         $count = 1;
+        
 
         //$stopover = stopover::all();
-        $stopover = stopover::where('date','>=',date('m/d/Y',strtotime($after)))->get();
-
+        $stopover = stopover::where('stopovers.date','>=',date('m/d/Y',strtotime($after)))->join('post_rides','post_rides.id','=','stopovers.post_id')->where('post_rides.e_lat',$request->lat2)->get();
+        // dd($stopover);
         $satting = ride_setting::first();
         //dd($stopover,$satting);die();
         foreach ($stopover as $stopovers) {
@@ -195,7 +196,7 @@ class RideController extends Controller
                 }
             }
         }
-
+        // dd($stopover);
         if ($count > 1) {
             $show = 1;
         } else {

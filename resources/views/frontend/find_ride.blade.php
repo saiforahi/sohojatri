@@ -247,17 +247,15 @@
 
                         @foreach ($stopover as $ride)
                         <?php
-                        $s_location = PostRideAddress($ride->post_id, $ride->going, 'location');
-                        $e_location = PostRideAddress($ride->post_id, $ride->target, 'location');
-                        $s_lat = PostRideAddress($ride->post_id, $ride->going, 'lat');
-                        $s_lng = PostRideAddress($ride->post_id, $ride->going, 'lng');
-                        $e_lat = PostRideAddress($ride->post_id, $ride->target, 'lat');
-                        $e_lng = PostRideAddress($ride->post_id, $ride->target, 'lng');
+                            $s_location = PostRideAddress($ride->post_id, $ride->going, 'location');
+                            $e_location = PostRideAddress($ride->post_id, $ride->target, 'location');
+                            $s_lat = PostRideAddress($ride->post_id, $ride->going, 'lat');
+                            $s_lng = PostRideAddress($ride->post_id, $ride->going, 'lng');
+                            $e_lat = PostRideAddress($ride->post_id, $ride->target, 'lat');
+                            $e_lng = PostRideAddress($ride->post_id, $ride->target, 'lng');
                         ?>
-                        @if (distance($s_lat, $s_lng, $userLat, $userLng, "K") < $satting->search && distance($e_lat,
-                        $e_lng, $userLat2, $userLng2, "K") < $satting->search)
+                        @if(distance($s_lat, $s_lng, $userLat, $userLng, "K") < $satting->search && distance($e_lat, $e_lng, $userLat2, $userLng2, "K") < $satting->search)
                         <li onclick="location.href ='{{route('booking.index',$ride->tracking)}}';">
-
                             <div class="row text-center">
                                 <div class="col-12 col-sm-4 col-md-2 dateShow lh-1-3">
                                     <p class="my-0">{{$ride->time}}
@@ -274,17 +272,13 @@
                                     </div>
                                 </div>
                                 <div class="col-11 col-sm-4 col-md location text-left">
-
                                     <h4>Departure</h4>
                                     <p>{{$s_location}}</p><br>
                                     <h4>Destination</h4>
                                     {{$e_location}}
                                     <p></p>
-
-
                                 </div>
                                 <div class="col-12 col-sm-4 col-md-2 p-0">
-
                                     <aside class="single_sidebar_widget author_widget text-center lh-1-1">
                                         <img class="author_img w-25 rounded-circle"
                                              src="{{userInformation(getRide($ride->post_id)->user_id,'image')}}"
@@ -298,8 +292,7 @@
                                             <span class="fa fa-star"></span>
                                             <span class="fa fa-star"></span>
                                         </a><br>
-                                        <a href="#" class="btn btn-success small circle my-1 fs-10">View
-                                            profile/Preview</a>
+                                        <a href="#" class="btn btn-success small circle my-1 fs-10">View profile/Preview</a>
                                     </aside>
 
 
@@ -308,12 +301,9 @@
                                     <div class="price my-2 text-bold fs-18 text-black">
                                         ৳ {{$ride->price}}</div>
                                     @if(seat($ride->going,$ride->target,$ride->post_id,$ride->date) > 0)
-                                    @for($i=1;$i<=seat($ride->
-                                    going,$ride->target,$ride->post_id,$ride->date);$i++)
-                                    <span class="fa-2x fas fa-male checked" data-toggle="tooltip"
-                                          data-placement="bottom"
-                                          title="{{seat($ride->going,$ride->target,$ride->post_id,$ride->date)}} Seat"></span>
-                                    @endfor
+                                        @for($i=1;$i<=seat($ride->going,$ride->target,$ride->post_id,$ride->date);$i++)
+                                            <span class="fa-2x fas fa-male checked" data-toggle="tooltip" data-placement="bottom" title="{{seat($ride->going,$ride->target,$ride->post_id,$ride->date)}} Seat"></span>
+                                        @endfor
                                     @else
                                     {{"Booked"}}
                                     @endif
@@ -330,9 +320,7 @@
                                         src="{{asset('img/icon/emailAccessYesSmall.gif')}}">@endif
                                     @if(in_array(4,$data))<img
                                         src="{{asset('img/icon/phoneAccessYesSmall.gif')}}">@endif
-                                    <p class="text-bold fs-14"><b
-                                            class="text-muted">{{getCarById(getRide($ride->post_id)->car_id,'car_type')=='Premier'? 'Luxury':'Comfortable'}}</b>
-                                    </p>
+                                    <p class="text-bold fs-14"><b class="text-muted">{{getCarById(getRide($ride->post_id)->car_id,'car_type')=='Premier'? 'Luxury':'Comfortable'}}</b></p>
                                 </div>
                                 <div class="col-12 col-sm-4 col-md-2 reviewStar my-auto">
                                     <span class="fa fa-star checked"></span>

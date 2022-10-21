@@ -97,7 +97,7 @@ function UserNameIs($column)
 
 function UserPostRide($column)
 {
-    return post::where('user_id', '=', $column)->get();
+    return post_ride::where('user_id', '=', $column)->get();
 }
 
 function UserEmail($column)

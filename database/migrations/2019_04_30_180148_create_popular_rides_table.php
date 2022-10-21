@@ -15,7 +15,13 @@ class CreatePopularRidesTable extends Migration
     {
         Schema::create('popular_rides', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('tracking');
+            $table->string('s_lat');
+            $table->string('s_lng');
+            $table->string('s_location');
+            $table->string('e_lat');
+            $table->string('e_lng');
+            $table->string('e_location');
+            $table->double('payment',8,2);
             $table->timestamps();
         });
     }

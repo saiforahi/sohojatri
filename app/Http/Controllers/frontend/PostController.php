@@ -262,7 +262,6 @@ class PostController extends Controller
         $request->merge([
             'condition' => implode(',', (array)$request->get('condition'))
         ]);
-        dd($request->all());
         $post = post_ride::find($request->id);
         $post->condition = $request->condition;
         $post->save();

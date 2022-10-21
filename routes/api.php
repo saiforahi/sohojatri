@@ -29,6 +29,7 @@ Route::post('/login',[App\Http\Controllers\api\auth\AuthController::class,'login
 Route::get('/logout',[App\Http\Controllers\api\auth\AuthController::class,'logout']);
 
 Route::middleware(['auth:sanctum'])->prefix('ride')->group(function () {
+    Route::post('find', [RideController::class, 'find_ride']);
     Route::post('request', [RequestController::class, 'RequestPostAPI']);
     Route::get('all', [RequestController::class, 'RequestPostAPI']);
     Route::post('post', [RideController::class, 'post_ride']);
