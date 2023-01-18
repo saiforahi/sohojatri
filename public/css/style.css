@@ -1016,7 +1016,7 @@ button.cupid-blue:active {
 }
 
 .blog_banner .banner_inner .overlay {
-    background: url(../img/banner/banner-2.jpg) no-repeat scroll center center;
+    background: url(../img/yoyo-ride.gif) no-repeat scroll center center;
     opacity: 0.5;
     height: 125%;
     position: absolute;
@@ -4549,7 +4549,7 @@ Leons modification
     position: relative;
 }
 .overlay{
-    background: url('../img/FoggyRoad.jpg') center center no-repeat;
+    background: url('../img/yoyo-ride.gif') center center no-repeat;
     background-size: cover;
    /*  z-index: 9999; */
 }
@@ -4581,7 +4581,7 @@ Leons modification
 }
 
 #PopularRide {
-    background-color: #68686a !important;
+    background-color: #9F3C96 !important;
 }
 
 /* ======================== sign up ========================== */

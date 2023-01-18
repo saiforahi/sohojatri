@@ -26,7 +26,7 @@
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
-            <img src="{{ asset('img/logo/logo.png') }}" alt="sohojatri logo" class="d-flex mx-auto">
+            <img src="{{ asset('img/logo/logo.png') }}" alt="sohojatri logo" width="150" class="d-flex mx-auto">
             <p class="login-box-msg">Sign in to start your session</p>
 
             <form action="{{ url('AdminLoginCheck') }}" method="post">

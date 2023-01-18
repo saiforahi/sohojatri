@@ -447,20 +447,20 @@
                     </div>
                     <div class="card">
                         <div class="card-header verifiedmassage border-all" id="headingThree">
-                            @if($user->phoneIsVerified == 0)<i class="fas fa-exclamation-circle"
+                            @if($user->phone_verified_at == null)<i class="fas fa-exclamation-circle"
                                                                style="color:orange"></i> Please verify your Phone
                             Number: {{$user->phone}}
                             <p> Add a phone number so you can verify it.
                                 Adding your phone number means<br> you'll be able to arrange your rides more easily.</p>
                             @endif
 
-                            @if($user->phoneIsVerified == 1)
+                            @if($user->phone_verified_at != null)
                                 Phone verified <br> <p class="inline-verified-massage verify-heading"> Your phone
                                     is: {{$user->phone}} <br>
                                     Now that you've verified your Phone number, we can easily contact you if needed.
                                 </p>@endif
 
-                            @if($user->phoneIsVerified == 0)
+                            @if($user->phone_verified_at == null)
                                 <button
                                     class="btn btn-sm pull-right badge badge-pill badge-warning pull-right m-1 mr-5 verify"
                                     type="button" data-toggle="collapse" style="padding: 12px 28px 11px 36px;"
@@ -468,7 +468,7 @@
                                     Verify
                                 </button>
                             @endif
-                            @if($user->phoneIsVerified == 1)
+                            @if($user->phone_verified_at != null)
                                 <span class="badge badge-pill  pull-right m-1 mr-5 " data-toggle="tooltip"
                                       data-placement="top" title="Your Phone is Verified"> <i class="fa fa-check-circle"
                                                                                               aria-hidden="true"

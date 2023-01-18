@@ -1,1 +1,8 @@
 [04-Jan-2020 02:23:36 America/Chicago] PHP Warning:  symlink(): File exists in /home2/durpallax/public_html/ch/public/symlinkcreate.php on line 2
+[09-Nov-2022 16:16:54 Asia/Dhaka] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home1/yoyocar/public_html/app/Http/Controllers/api/RideController.php on line 246
+[10-Dec-2022 10:26:45 America/Chicago] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.0.2". You are running 7.4.33. in /home1/yoyocar/public_html/vendor/composer/platform_check.php on line 24
+[26-Dec-2022 15:07:22 Asia/Dhaka] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 24576 bytes) in /home1/yoyocar/public_html/app/Http/Controllers/api/RideController.php on line 289
+[26-Dec-2022 15:07:34 Asia/Dhaka] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 24576 bytes) in /home1/yoyocar/public_html/app/Http/Controllers/api/RideController.php on line 289
+[26-Dec-2022 15:07:49 Asia/Dhaka] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 24576 bytes) in /home1/yoyocar/public_html/app/Http/Controllers/api/RideController.php on line 289
+[26-Dec-2022 15:08:22 Asia/Dhaka] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 24576 bytes) in /home1/yoyocar/public_html/app/Http/Controllers/api/RideController.php on line 289
+[26-Dec-2022 15:09:16 Asia/Dhaka] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 24576 bytes) in /home1/yoyocar/public_html/app/Http/Controllers/api/RideController.php on line 289

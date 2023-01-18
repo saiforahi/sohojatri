@@ -22,18 +22,30 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json(['success'=>true,'message'=>'User details','data'=>$request->user()],200);
 });
 
+
+Route::get('/all-ride',[RideController::class, 'all_ride']);
+Route::get('/rider-profile/{id}',[RideController::class, 'rider_details']);
+Route::get('/booking/{data}/{data2?}', [RideController::class, 'booking_details']);
 Route::post('/register',[App\Http\Controllers\api\auth\AuthController::class,'register']);
-Route::post('/verify-otp',[App\Http\Controllers\api\auth\AuthController::class,'verifyOTP']);
+Route::post('/verify-otp-all',[App\Http\Controllers\api\auth\AuthController::class,'verifyOTPAll']);
 Route::post('/resend-otp',[App\Http\Controllers\api\auth\AuthController::class,'resendOTP']);
+Route::post('/send-otp',[App\Http\Controllers\api\UserController::class,'sendOtpCode']);
+Route::post('/verify-otp',[App\Http\Controllers\api\UserController::class,'verifyOTP']);
 Route::post('/login',[App\Http\Controllers\api\auth\AuthController::class,'login']);
 Route::get('/logout',[App\Http\Controllers\api\auth\AuthController::class,'logout']);
 
+Route::post('/forgot-password', [App\Http\Controllers\api\UserController::class,'ForgotPasswordPost']);
+Route::post('/forgot-password-update', [App\Http\Controllers\api\UserController::class,'ForgotPasswordChange']);
+Route::post('find', [RideController::class, 'find_ride']);
+
 Route::middleware(['auth:sanctum'])->prefix('ride')->group(function () {
-    Route::post('find', [RideController::class, 'find_ride']);
     Route::post('request', [RequestController::class, 'RequestPostAPI']);
     Route::get('all', [RequestController::class, 'RequestPostAPI']);
     Route::post('post', [RideController::class, 'post_ride']);
+    Route::delete('stopovers/{id}', [RideController::class, 'stopoverDelete']);
     Route::prefix('post')->group(function () {
+        
+        Route::post('post_ride', [RideController::class, 'post_ride']);
         Route::post('step1', [RideController::class, 'post_ride_step1']);
         Route::post('step2', [RideController::class, 'post_ride_step2']);
         Route::post('step3', [RideController::class, 'post_ride_step3']);

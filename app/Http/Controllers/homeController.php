@@ -46,17 +46,19 @@ class homeController extends Controller
 
         $email = $regMedium == 'email' ? $request->emailOrMobile : null;
         $phone = $regMedium == 'email' ? null : $request->emailOrMobile;
+        
         try {
             if ($email) {
-                $user = user::where('email', $email)->first();
+                $user = User::where('email', $email)->first();
             }
             if ($phone) {
                 $number = $this->phone_number($phone);
-                if (!$number) {
+                if ($number==false) {
                     return redirect()->back()->withErrors(['Invalid email and phone number']);
                 }
-                $user = user::where('phone', $phone)->first();
+                $user = User::where('phone', $number)->first();
             }
+            
             if (!empty($user)) {
                 if ($user && Hash::check($request->password, $user->password)) {
                     $user->token = $user->createToken('api_token')->plainTextToken;
@@ -102,7 +104,7 @@ class homeController extends Controller
         $phone = $regMedium == 'email' ? null : $request->emailOrMobile;
         $userId = time();
         try {
-            $user = new user;
+            $user = new User;
             if ($email) {
                 $check = User::where('email', $email)->first();
                 if ($check) {
@@ -150,7 +152,7 @@ class homeController extends Controller
 
     public function facebookDataDeletion(){
         $user = Socialite::driver('facebook')->user();
-        $reg_user = user::where('facebook_id', $user->getId())->first();
+        $reg_user = User::where('facebook_id', $user->getId())->first();
         if ($reg_user) {
             $reg_user->facebook_id = "";
             $reg_user->save();
@@ -166,19 +168,19 @@ class homeController extends Controller
         $user = Socialite::driver('facebook')->user();
 
         if (Session::get('userId') != null) {
-            $account = user::where('user_id', Session('userId'))->first();
+            $account = User::where('user_id', Session('userId'))->first();
             $account->facebook_id = $user->getId();
             $account->save();
             return redirect('sp-verification');
         } else {
-            $reg_user = user::where('facebook_id', $user->getId())->first();
+            $reg_user = User::where('facebook_id', $user->getId())->first();
             if ($reg_user) {
                 Session::put('token', $reg_user->token);
                 Session::put('userId', $reg_user->user_id);
                 return redirect('/');
             } else {
                 $userId = time();
-                $usernew = new user();
+                $usernew = new User();
                 $usernew->name = $user->getName();
                 $usernew->user_id = $userId;
                 $usernew->image = $user->getAvatar();
@@ -204,14 +206,14 @@ class homeController extends Controller
     {
         $user = Socialite::driver('google')->user();
 
-        $reg_user = user::where('email', $user->getEmail())->first();
+        $reg_user = User::where('email', $user->getEmail())->first();
         if ($reg_user) {
             Session::put('token', $reg_user->token);
             Session::put('userId', $reg_user->user_id);
             return redirect('/');
         } else {
             $userId = time();
-            $usernew = new user();
+            $usernew = new User();
             $usernew->name = $user->getName();
             $usernew->user_id = $userId;
             $usernew->image = $user->getAvatar();
@@ -257,14 +259,14 @@ class homeController extends Controller
         try {
             $verification_code = CommonHelper::generateOTP(6);
             if ($email) {
-                $user = user::where('email', $email)->first();
+                $user = User::where('email', $email)->first();
             }
             if ($phone) {
                 $number = $this->phone_number($phone);
                 if (!$number) {
                     return redirect()->back()->withErrors(['Invalid email and phone number']);
                 }
-                $user = user::where('phone', $number)->first();
+                $user = User::where('phone', $number)->first();
             }
             if (!empty($user)) {
                 if ($request->verification_code) {
@@ -312,7 +314,7 @@ class homeController extends Controller
             'password' => 'required|max:20|min:6',
             'confirmed' => 'required|max:20|min:6',
         ]);
-        $search = user::where('user_id', $request->user_id)->where('id', $request->id)->where('token', $request->token)->first();
+        $search = User::where('user_id', $request->user_id)->where('id', $request->id)->where('token', $request->token)->first();
         if (!empty($search)) {
             $search->password = Hash::make($request->password);
             $search->update();

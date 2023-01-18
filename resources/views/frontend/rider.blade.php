@@ -11,11 +11,11 @@
                 <div class="col-4">
                     <div class="blog_right_sidebar">
                         <aside class="single_sidebar_widget author_widget">
-                            <img class="author_img rounded-circle" src="{{$user->image}}"
+                            <img class="author_img rounded-circle" src="@isset($user->image){{$user->image}}@endisset"
                                  width="100px" height="100px"
                                  alt="">
-                            <h4 class="text-capitalize">{{$user->name}} {{$user->lname}}</h4>
-                            {{date("Y") - $user->year}} y/o
+                            <h4 class="text-capitalize">@isset($user->name){{$user->name}} {{$user->lname}} @endisset</h4>
+                            @isset($user->year){{date("Y") - $user->year}}@endisset y/o
                             <p class="fs-8 my-0">
                                 @for($i=1;$i<=5;$i++)
                                     @if($i>rating($user->user_id))
@@ -39,11 +39,17 @@
                                 Phone Verified<br>
                                 {!!userInformation($user->user_id,'email_verified_at') != null ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
                                 Email Verified<br>
-                                {!!verification($user->user_id)->nid_status == 1 ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
+                                @isset(verification($user->user_id)->nid_status)
+                                    {!!verification($user->user_id)->nid_status == 1 ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
+                                @endisset
                                 NID Verified<br>
+                                @isset(verification($user->user_id)->passport_status)
                                 {!!verification($user->user_id)->passport_status == 1 ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
+                                @endisset
                                 Passport Verified<br>
+                                @isset(verification($user->user_id)->driving_status)
                                 {!!verification($user->user_id)->driving_status == 1 ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i> '!!}
+                                @endisset
                                 Driving Licence Verified<br>
                             </p>
                             <div class="br"></div>

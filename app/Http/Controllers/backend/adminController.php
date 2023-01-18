@@ -8,6 +8,9 @@ use Session;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\car;
+use App\Models\stopover;
+use App\Models\car_brand;
 
 class adminController extends Controller
 {
@@ -70,7 +73,17 @@ class adminController extends Controller
 
     public function dashboard()
     {
-        return view('backend.index');
+        $car_apporved = car::where('status',1)->count();
+        $car_pending = car::where('status',0)->count();
+        $complete_book = stopover::join('post_rides', 'stopovers.post_id', '=', 'post_rides.id')->select('stopovers.*')->where('post_rides.status', 1)->where('stopovers.status', 1)->orderBy('stopovers.date', 'desc')->count();
+        $partial_book = stopover::join('post_rides', 'stopovers.post_id', '=', 'post_rides.id')->select('stopovers.*')->where('post_rides.status', 1)->where('stopovers.status', 1)->orderBy('stopovers.date', 'desc')->count();
+        $not_book = stopover::join('post_rides', 'stopovers.post_id', '=', 'post_rides.id')->select('stopovers.*')->where('post_rides.status', 1)->whereIn('stopovers.status', [0, 1])->orderBy('stopovers.date', 'desc')->count();
+        $on_going_booked = stopover::join('post_rides', 'stopovers.post_id', '=', 'post_rides.id')->select('stopovers.*')->where('post_rides.status', 1)->where('stopovers.date', '>=', date("m/d/Y"))->orderBy('stopovers.date', 'desc')->count();
+        $total_complete_ride = stopover::join('post_rides', 'stopovers.post_id', '=', 'post_rides.id')->select('stopovers.*')->where('post_rides.status', 1)->where('stopovers.date', '<', date("m/d/Y"))->whereNotIn('stopovers.status', [0, 1])->orderBy('stopovers.date', 'desc')->count();
+        $total_booking_list = stopover::join('post_rides', 'stopovers.post_id', '=', 'post_rides.id')->select('stopovers.*')->where('post_rides.status', 1)->orderBy('stopovers.date', 'desc')->count();
+        $car_brand = car_brand::count();
+        
+        return view('backend.index',compact('car_apporved','car_pending','complete_book','partial_book','not_book','on_going_booked','total_complete_ride','total_booking_list','car_brand'));
     }
 
 

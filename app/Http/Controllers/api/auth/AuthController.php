@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\VerifyOTP;
 use App\Models\Validation;
+use App\Models\otp_verify;
 use App\Models\verification;
 use Exception;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Hash;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Arr;
+use DB;
 
 class AuthController extends Controller
 {
@@ -47,38 +49,76 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
+        
     	$validator = Validator::make($request->all(), [
             'username' => 'required',
             'password' => 'required|string|min:8',
         ]);
         if ($validator->fails()) {
-            return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
+            return response()->json(['success'=>false,'errors'=>$validator->errors()], 500);
         }
+        $regMedium = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+
+        $email = $regMedium == 'email' ? $request->username : null;
+        $phone = $regMedium == 'email' ? null : $request->username;
         try{
-            $user=User::where('phone',$request->username)->orWhere('email',$request->username)->first();
-            if (!$user || !Hash::check($request->password, $user->password)) {
+            if ($email) {
+                $user = User::where('email', $email)->first();
+            }
+            elseif ($phone) {
+                $number = $this->phone_number($phone);
+                if ($number==false) {
+                    return redirect()->back()->withErrors(['Invalid phone number']);
+                }
+                $user = User::where('phone', $number)->where('phone_verified_at','!=',null)->first();
+            }
+            if (empty($user) || !Hash::check($request->password, $user->password)) {
                 throw ValidationException::withMessages([
-                    'email' => ['The provided credentials are incorrect'],
+                    'error' => ['The provided credentials are incorrect'],
                 ]);
+            }
+            if($user->phone_verified_at == null){
+                return response()->json(['success'=>false,'errors'=>'Phone is not verified'], 500);
             }
             $token=$user->createToken('api_token')->plainTextToken;
             return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"data"=>$user],200);
         }
         catch(Exception $e){
-            return response()->json(['success'=>false,'errors'=>$e->getMessage()], 404);
+            return response()->json(['success'=>false,'errors'=>$e->getMessage()], 500);
         }
         
     }
+    
+    function techno_bulk_sms($mobile_no,$message){
+    	    $url = 'https://24bulksms.com/24bulksms/api/api-sms-send';
+      
+            $ap_key= "175383914514785920230101104227pmlHzCOFKi"; 
+            $sender_id='233';
+            $mobile_no=$mobile_no;
+            $message=$message;
+            $user_email='sayiful@gmail.com';
+        	$data = array('api_key' => $ap_key,
+        	 'sender_id' => $sender_id,
+        	 'message' => $message,
+        	 'mobile_no' =>$mobile_no,
+        	 'user_email'=> $user_email		
+        	 );
+            
+        	// use key 'http' even if you send the request to https://...
+        	 $curl = curl_init($url);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);     
+            $output = curl_exec($curl);
+            curl_close($curl);
+        
+    }
+    
     public function resendOTP(Request $request){
-        $validator=Validator::make($request->all(),[
-            'user_id'=>'required|exists:users,user_id',
-        ]);
-        if($validator->fails()){                                            //validating general registration rules
-            return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
-        }
+        $user= User::where('user_id',$request->user_id)->first();
         try{
-            Validation::where('fk_user_id',$request->user_id)->delete();
-            $user=User::where('user_id',$request->user_id)->first();
             $otp=random_int(100000, 999999);
             Validation::create([
                 'fk_user_id'=>$request->user_id,
@@ -86,20 +126,54 @@ class AuthController extends Controller
                 'validation_type'=>'email',
                 'code'=>$otp
             ]);
-            Mail::to($user->email)->send(new VerifyOTP($otp,$user->name));
+            
+                 
+            $mobileNo=$user->phone;
+            $message='your verification code is'.$otp;
+            $response = $this->techno_bulk_sms($mobileNo,$message);
+            
             return response()->json(['success'=>true,'message'=>'OTP sent!'],200);
         }
         catch(Exception $e){
             return response()->json(['success'=>false,'errors'=>$e->getMessage()], 500);
         }
     }
+    
+    public function verifyOTPAll(Request $request){
+        $validator=Validator::make($request->all(),[
+            'user_id'=>'required|exists:users,user_id',
+            'otp_code'=>'required|string|max:6|min:6'
+        ]);
+        if($validator->fails()){                                        
+            return response()->json(['success'=>false,'errors'=>$validator->errors()], 500);
+        }
+        try{
+            if(Validation::where(['fk_user_id'=>$request->user_id,'code'=>$request->otp_code])->exists()){
+                Validation::where(['fk_user_id'=>$request->user_id,'code'=>$request->otp_code])->delete();
+                $user= User::where('user_id',$request->user_id)->first();
+                $user->email_verified_at=date("Y-m-d H:i:s");
+                $user->save();
+                $verification=verification::updateOrCreate(['user_id'=>$user->user_id],['email'=>1]);
+                DB::table('users')
+                    ->where('user_id',$user->user_id)
+                    ->update(['phoneIsVerified' => 1]);
+                $token=$user->createToken('api_token')->plainTextToken;
+                return response()->json(['success'=>true,'token'=>$token,'message'=>'OTP verified & User Signed in!',"data"=>$user],200);
+            }
+            return response()->json(['success'=>false,'message'=>'Invalid code!'],500);
+        }
+        catch(Exception $e){
+            return response()->json(['success'=>false,'errors'=>$e->getMessage()], 500);
+        }
+    }
+    
     public function resetPassword(Request $request){
         $validator=Validator::make($request->all(),[
             'old_password'=>'required|min:8',
             'new_password'=>'required|min:8'
         ]);
         if($validator->fails()){                                            //validating general registration rules
-            return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
+            return response()->json(['success'=>false,'errors'=>$validator->errors()], 500);
         }
         try{
             if(Hash::check($request->old_password,FacadesAuth::user()->password)){
@@ -108,36 +182,13 @@ class AuthController extends Controller
                 $user->save();
                 return response()->json(['success'=>true,'message'=>'Your password has been reset!'],200);
             }
-            return response()->json(['success'=>false,'message'=>'Password mismatch!'],404);
+            return response()->json(['success'=>false,'message'=>'Password mismatch!'],500);
         }
         catch(Exception $e){
             return response()->json(['success'=>false,'errors'=>$e->getMessage()], 500);
         }
     }
-    public function verifyOTP(Request $request){
-        $validator=Validator::make($request->all(),[
-            'user_id'=>'required|exists:users,user_id',
-            'otp_code'=>'required|string|max:6|min:6'
-        ]);
-        if($validator->fails()){                                            //validating general registration rules
-            return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
-        }
-        try{
-            if(Validation::where(['fk_user_id'=>$request->user_id,'code'=>$request->otp_code])->exists()){
-                Validation::where(['fk_user_id'=>$request->user_id,'code'=>$request->otp_code])->delete();
-                $user=User::where('user_id',$request->user_id)->first();
-                $user->email_verified_at=date("Y-m-d H:i:s");
-                $user->save();
-                $verification=verification::updateOrCreate(['user_id'=>$user->user_id],['email'=>1]);
-                $token=$user->createToken('api_token')->plainTextToken;
-                return response()->json(['success'=>true,'token'=>$token,'message'=>'OTP verified & User Signed in!',"data"=>$user],200);
-            }
-            return response()->json(['success'=>false,'message'=>'Invalid code!'],422);
-        }
-        catch(Exception $e){
-            return response()->json(['success'=>false,'errors'=>$e->getMessage()], 500);
-        }
-    }
+    
     public function register(Request $request) {
         $validator=Validator::make($request->all(),$this->general_reg_rules);
         if($validator->fails()){                                            //validating general registration rules
@@ -178,7 +229,13 @@ class AuthController extends Controller
                 'validation_type'=>'email',
                 'code'=>random_int(100000, 999999)
             ]);
-            Mail::to($user->email)->send(new VerifyOTP($validation->code,$user->name));
+            //Mail::to($user->email)->send(new VerifyOTP($validation->code,$user->name));
+            
+            $otp=random_int(100000, 999999);
+            $mobileNo=$user->phone;
+            $message='your signup verification code is '.$otp;
+            
+            $response = $this->techno_bulk_sms($mobileNo,$message);
             
             return response()->json([
                 'success' => true,

@@ -173,7 +173,7 @@ class VerificationController extends Controller
                     }
                     $search->delete();
                     $account->phone = $number;
-                    $account->phoneIsVerified = 1;
+                    $account->phone_verified_at = date('d-m-y h:i:s');
                     $account->save();
                     return redirect('sp-verification');
                 }
@@ -188,6 +188,7 @@ class VerificationController extends Controller
 
         return redirect('sp-verification');
     }
+
     public function SpVerificationPost_API(Request $request)
     {
         $verification = verification::where('user_id', Auth::user()->user_id)->first();
@@ -338,7 +339,7 @@ class VerificationController extends Controller
                     }
                     $search->delete();
                     $account->phone = $number;
-                    $account->phoneIsVerified = 1;
+                    $account->phone_verified_at = date('d-m-y h:i:s');
                     $account->save();
                     return redirect('sp-verification');
                 }

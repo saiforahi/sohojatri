@@ -204,7 +204,7 @@
                                                                             @endfor
 
                                                                         </p><br>
-                                                                        <a href="{{route('rider',getRide($ride->post_id)->user_id)}}"
+                                                                        <a href="{{route('rider',userId(getRide($ride->post_id))->user_id) }}"
                                                                            class="btn btn-success small circle my-1 fs-10">View
                                                                             profile/Preview</a>
                                                                     </aside>

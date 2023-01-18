@@ -219,6 +219,14 @@ function resource($column)
     return $query;
 }
 
+function resource_name($column)
+{
+    $query = DB::table('resources')
+        ->where('name', '=', $column)
+        ->get();
+    return $query;
+}
+
 function getResourceById($column)
 {
     $query = DB::table('resources')
@@ -232,6 +240,11 @@ function userInformation($column, $column2)
         ->where('user_id', '=', $column)
         ->pluck($column2)
         ->first();
+    return $query;
+}
+function userId($id)
+{
+    $query = DB::table('users')->where('user_id', '=',$id->user_id)->first();
     return $query;
 }
 

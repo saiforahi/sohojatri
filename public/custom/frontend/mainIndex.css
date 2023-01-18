@@ -48,7 +48,7 @@ body {
 }
 
 .bg-paste {
-    background-color: #31c6ee !important;
+    background-color: #9F3C96 !important;
 }
 
 .f1f1f1 {
@@ -110,7 +110,7 @@ body {
     font-size: 1em;
     color: #fff;
     font-weight: bold;
-    background-color: #31C6EE;
+    background-color: #9F3C96;
     text-transform: uppercase;
 }
 
@@ -715,7 +715,7 @@ input.input100 {
     width: 100%;
     background-image: url(../../img/icon/footerSlopesFlowers.png);
     background-repeat: repeat-x;
-    background-color: #31c6ee;
+    background-color: #9F3C96;
     clear: both;
     display: block;
     padding-top: 150px;
